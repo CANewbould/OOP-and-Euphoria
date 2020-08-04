@@ -1,0 +1,83 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+ <title></title>
+ <link rel="stylesheet" media="screen, projection, print" type="text/css" href="style.css"/>
+<!-- source="object.e.cr" -->
+</head>
+<body>
+
+<a name="_0_ooeulibraryfortheobjectclass"></a><a name="ooeulibraryfortheobjectclass"></a><h1>OOEU Library for the Object Class</h1>
+<hr />
+
+<p>Version: 1.0.0<br />
+OOEU Versions: 1.9.0 and later<br />
+Author: C A Newbould<br />
+Date: 2020.08.04<br />
+Status: operational; incomplete<br />
+Changes:<br /> </p>
+<ul><li>created
+</li><li><em>TRUE</em> and <em>FALSE</em> defined
+</li><li><strong>boolean</strong> defined
+</li><li><tt>iif</tt> defined
+</li><li><strong>Object</strong> defined
+</li><li><tt>show</tt> (<strong>Object</strong>) defined
+</li></ul>
+<hr />
+
+<a name="_1_ooeucorelibraryobjecte"></a><a name="ooeucorelibraryobjecte"></a><h2>OOEU core library: object.e</h2>
+<a name="_2_constants"></a><a name="constants"></a><h3>Constants</h3><ul><li><em>FALSE</em>
+</li><li><em>TRUE</em>
+</li></ul>
+<a name="_3_types"></a><a name="types"></a><h3>Types</h3><ul><li><strong>boolean</strong>
+</li></ul>
+<a name="_4_routines"></a><a name="routines"></a><h3>Routines</h3><ul><li><tt>iif</tt>(i,x,x) : x
+</li></ul>
+<a name="_5_classesmethods"></a><a name="classesmethods"></a><h3>Classes (methods)</h3><ul><li><strong>Object</strong><ul><li><tt>show</tt>()
+</li></ul>
+</li></ul>
+<p> Utilise these features  by adding the following statement to your module: </p>
+
+<pre class="examplecode"><font color="#0000FF">include </font><font color="#330033">object.e</font>
+</pre>
+
+<hr />
+
+<a name="_6_interface"></a><a name="interface"></a><h2>Interface</h2>
+<a name="_8_constants"></a><a name="constants"></a><h3>Constants</h3>
+<pre class="examplecode"><font color="#0000FF">global constant </font><font color="#330033">FALSE = </font><font color="#880033">(</font><font color="#330033">1=0</font><font color="#880033">)</font>
+</pre>
+
+<pre class="examplecode"><font color="#0000FF">global constant </font><font color="#330033">TRUE = </font><font color="#880033">(</font><font color="#330033">1=1</font><font color="#880033">)</font>
+</pre>
+
+<a name="_9_routines"></a><a name="routines"></a><h3>Routines</h3>
+<pre class="examplecode"><font color="#0000FF">global function </font><font color="#330033">iif</font><font color="#880033">(</font><font color="#0000FF">integer </font><font color="#330033">test, </font><font color="#0000FF">object </font><font color="#330033">true, </font><font color="#0000FF">object </font><font color="#330033">false</font><font color="#880033">) </font><font color="#330033">: </font><font color="#0000FF">object </font><font color="#FF0055">-- inline if statement</font>
+</pre>
+
+<p> Parameters: </p>
+<ol><li><em>test</em>: expression which return a Euphoria true/false
+</li><li><em>true</em>: the value to return if the expression is true
+</li><li><em>false</em>: the value to return if the expression is false
+</li></ol>
+<p> Returns:</p>
+
+<p>  an <strong>object</strong>: either <em>true</em> or <em>false</em> </p>
+
+<a name="_10_classes"></a><a name="classes"></a><h3>Classes</h3>
+<pre class="examplecode"><font color="#0000FF">global </font><font color="#330033">euclass Object</font><font color="#880033">(</font><font color="#0000FF">object </font><font color="#330033">self</font><font color="#880033">) </font><font color="#FF0055">-- the base (anonymous) class</font>
+</pre>
+
+<a name="_11_property"></a><a name="property"></a><h4>Property</h4>
+<pre class="examplecode"><font color="#0000FF">object </font><font color="#330033">this</font>
+</pre>
+
+<a name="_12_methods"></a><a name="methods"></a><h4>Methods</h4>
+<pre class="examplecode"><font color="#330033">show</font><font color="#880033">() </font><font color="#FF0055">-- displays (prettily) the Object's property value</font>
+</pre>
+</body></html>
