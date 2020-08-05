@@ -8,21 +8,15 @@
 --/*
 --= OOEU Library for the Sequence Class and all derived classes
 ------
---[[[Version: 1.0.1
+--[[[Version: 1.1.0
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
 --Date: 2020.08.05
 --Status: operational; incomplete
 --Changes:]]]
---* changed include to embrace //atom.e//
---* ##reverse## defined
---* ##map## defined
---* ##filter## defined
---* **string** defined
---* **String** defined
---* ##String## defined
---* ##show## defined
---* **vector** defined
+--* ##Sequence## extended
+--* **Vector** defined
+--* ##Vector## defined - two versions
 --
 ------
 --==OOEU Module Library: sequence.e
@@ -37,6 +31,7 @@
 --===Classes (methods)
 --* **Sequence**(**Object**)
 --** ##Sequence(s) : S
+--** ##Sequence(o,i) : S
 --** ##filter(r) : s
 --** ##fold##(r,x) : x
 --** ##length() : i
@@ -46,6 +41,9 @@
 --** ##String##(str) : Str
 --** ##show()
 --** ##show(b)
+--* **Vector**(**Sequence**)
+--** ##Vector##() : V
+--** ##Vector##(i,i) : V
 --
 -- Utilise these features
 -- by adding the following statement to your module:
@@ -147,6 +145,9 @@ global euclass Sequence(Object self) -- the type class for all multi-valued obje
     function Sequence(sequence s) : Sequence
         return s -- type-checking
     end function
+    function Sequence(object o, integer i) : Sequence
+        return repeat(o, i)
+    end function
 end euclass
 --------------------------------------------------------------------------------
 --/*
@@ -154,6 +155,7 @@ end euclass
 --<eucode>sequence this</eucode>
 --====Constructors
 --<eucode>Sequence(sequence s) : Sequence -- assigns type-checked property value</eucode>
+--<eucode>Sequence(object o, integer i) : Sequence -- o repeated i times</eucode>
 --====Methods
 --<eucode>function filter(rid fn) : sequence -- selected elements of the source - this if fn this
 --<eucode>function foldr(rid fn, object init) : object -- the accumulation of elements in the sequence, starting with init
@@ -186,11 +188,45 @@ end euclass
 --<eucode>procedure show([boolean lf]) -- displays the source</eucode>
 --*/
 --------------------------------------------------------------------------------
+global euclass Vector(Sequence self) -- all-atom array Objects
+    function Vector(vector v) : Vector
+        return v
+    end function
+    function Vector(integer s, integer f) : Vector
+        return run(s, f)
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>vector this</eucode>
+--====Constructors
+--<eucode>Vector(vector v) : Vector -- assigns type-checked property value</eucode>
+--<eucode>Vector(integer s, integer f) : Vector -- {s..f}</eucode>
+--====Methods
+--*/
+--------------------------------------------------------------------------------
 --==== Defined instances
 --
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.0.1
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.08.05
+--Status: operational; incomplete
+--Changes:]]]
+--* changed include to embrace //atom.e//
+--* ##reverse## defined
+--* ##map## defined
+--* ##filter## defined
+--* **string** defined
+--* **String** defined
+--* ##String## defined
+--* ##show## defined
+--* **vector** defined
 --------------------------------------------------------------------------------
 --[[[Version: 1.0.0
 --OOEU Versions: 1.9.0 and later
