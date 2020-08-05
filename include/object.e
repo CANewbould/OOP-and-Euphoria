@@ -8,13 +8,13 @@
 --/*
 --= OOEU Library for the Object Class
 ------
---[[[Version: 1.1.0
+--[[[Version: 1.2.0
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
 --Date: 2020.08.05
 --Status: operational; incomplete
 --Changes:]]]
---* moved core Euphoria material to //core.e//
+--* ##show## extended
 --
 ------
 --==OOEU core library: object.e
@@ -24,7 +24,7 @@
 --
 --===Classes (methods)
 --* **Object**
---** ##show##()
+--** ##show##([s])
 --
 -- Utilise these features
 -- by adding the following statement to your module:
@@ -71,13 +71,17 @@ global euclass Object(object self) -- the base (anonymous) class
     procedure show()
         ?this
     end procedure
+    procedure show(sequence format)
+        printf(1, format, {this})
+    end procedure
 end euclass
 --------------------------------------------------------------------------------
 --/*
 --====Property
 --<eucode>object this</eucode>
 --====Methods
---<eucode>show() -- displays (prettily) the Object's property value</eucode>
+--<eucode>show([sequence format]) -- displays the Object's property value
+-- either prettily or via a format specifier </eucode>
 --*/
 --------------------------------------------------------------------------------
 --==== Defined instances
@@ -85,6 +89,14 @@ end euclass
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.1.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.08.05
+--Status: operational; incomplete
+--Changes:]]]
+--* moved core Euphoria material to //core.e//
 --------------------------------------------------------------------------------
 --[[[Version: 1.0.0
 --OOEU Versions: 1.9.0 and later
