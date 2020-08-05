@@ -1,4 +1,5 @@
 # OOP and Euphoria
+
 A set of OOP libraries for use with the OOEU version of the Euphoria programming language.
 
 # Core Euphoria
@@ -19,7 +20,9 @@ This implementation of OOP using [OOEU](http://ooeu.sourceforge.net/) follows th
 
 Within these library modules further sub-classes are defined. For example, *atom.e* contains the definition of the **Integer** class; whilst *sequence.e* contains the definitions of both **String** and **Vector**.
 
-Also as a parallel to the parent language, Euphoria, a library *object.e* is defined, which acts, as in other OOP contexts, as a core module. Its main purpose, in fact, is to hold the definition of a type missing from Core Euphoria but which is crucial to effective operation of both Euphoria and OOEU: the **boolean** type. The few other entries are methods which provide a rudimentary framework, but are typically overridden in the more specialised modules.
+Also as a parallel to the parent language, Euphoria, a library *object.e* is defined, which acts, as in other OOP contexts, as a core module. It has few definitions and these are typically overridden in the more specialised modules.
+
+Underpinning *object.e* is a module *core.e* which provides some basic utilities and type definitions. These are essentially Euphoria rather than OOEU, but have been constructed using OOEU's facility to show the type of each return value.
 
 ### Documentation
 
@@ -33,4 +36,7 @@ Also included in the repository are examples of the use of the modules, which we
 
 Clearly there is no limit to the extensibility of this development and users are encouraged to develop their own specialist modules to augment the core provided here.
 
-Nevertheless, one extension module is included, as it provides a Graphical User Interface (GUI). This accesses the Java Swing toolkit.
+For completeness, the repository contains two extension libraries for creating interfaces. These sit "on top" of the basic material and are:
+
+* *io.e*: a library providing basic Input/Output facilities for terminal-based applications
+* *japi.ew*: a library that provides a Graphical User Interface (GUI). This accesses the Java Swing toolkit.
