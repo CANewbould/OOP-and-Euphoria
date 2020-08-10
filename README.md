@@ -32,11 +32,13 @@ The library modules use a form of in-built comment, from which html documentatio
 
 Also included in the repository are examples of the use of the modules, which were originally written as tests of the correct working of the methods, but which also as guides to understanding.
 
+Some examples deliberately add further examples of OOP practice as further aids to understanding.
+
 ## Extension libraries
 
 Clearly there is no limit to the extensibility of this development and users are encouraged to develop their own specialist modules to augment the core provided here.
 
 For completeness, the repository contains two extension libraries for creating interfaces. These sit "on top" of the basic material and are:
 
-* *io.e*: a library providing basic Input/Output facilities for terminal-based applications
+* *io.e*: a library providing basic Input/Output facilities
 * *japi.ew*: a library that provides a Graphical User Interface (GUI). This accesses the Java Swing toolkit.
