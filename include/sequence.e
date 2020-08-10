@@ -8,15 +8,14 @@
 --/*
 --= OOEU Library for the Sequence Class and all derived classes
 ------
---[[[Version: 1.1.0
+--[[[Version: 1.1.1
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
---Date: 2020.08.05
+--Date: 2020.08.08
 --Status: operational; incomplete
 --Changes:]]]
---* ##Sequence## extended
---* **Vector** defined
---* ##Vector## defined - two versions
+--* addressed knock-on effects of defining **Rid** in //atom.e//
+--  had to leave two definitions as-is because of calling issues
 --
 ------
 --==OOEU Module Library: sequence.e
@@ -107,11 +106,11 @@ end type
 --*/
 --------------------------------------------------------------------------------
 global euclass Sequence(Object self) -- the type class for all multi-valued objects: extends Object
-    function filter(rid fn) : sequence
+    function filter(Rid fn) : sequence
         sequence result
         result = {}
         for i = 1 to length(this) do
-            if call_func(fn, {this[i]}) then result &= this[i]
+            if fn.func({this[i]}) then result &= this[i]
             else continue
             end if
         end for
@@ -211,6 +210,16 @@ end euclass
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.1.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.08.05
+--Status: operational; incomplete
+--Changes:]]]
+--* ##Sequence## extended
+--* **Vector** defined
+--* ##Vector## defined - two versions
 --------------------------------------------------------------------------------
 --[[[Version: 1.0.1
 --OOEU Versions: 1.9.0 and later
