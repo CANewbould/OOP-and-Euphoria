@@ -8,20 +8,16 @@
 --/*
 --= OOEU Library for the Atom Class and all derived classes
 ------
---[[[Version: 1.1.0
+--[[[Version: 1.2.0
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
---Date: 2020.08.05
+--Date: 2020.08.08
 --Status: operational; incomplete
 --Changes:]]]
---* created
---* ##div## defined
---* ##mod## defined
---* **character** defined
---* **Character** defined
---* ##lower## defined
---* ##upper## defined
---* **rid** defined
+--* **Rid** defined
+--* ##Rid## defined
+--* ##func## defined
+--* ##proc## defined
 --
 ------
 --==OOEU Module Library: atom.e
@@ -47,6 +43,10 @@
 --** ##Integer(i) : I
 --** ##div##(i) : i
 --** ##mod##(i) : i
+--* **Rid**(**Integer**)
+--** ##routine_id##(s) : r
+--** ##func([s]) : o
+--** ##proc##([s])
 --
 -- Utilise these features
 -- by adding the following statement to your module:
@@ -176,11 +176,51 @@ end euclass
 --<eucode>function upper() : character -- upper-case transformation</eucode>
 --*/
 --------------------------------------------------------------------------------
+global euclass Rid(rid self) -- routine_id Objects
+    function func() : object
+        return call_func(this, {})
+    end function
+    function func(sequence a) : object
+        return call_func(this, {a})
+    end function
+    procedure proc()
+        call_proc(this, {})
+    end procedure
+    procedure proc(sequence a)
+        call_proc(this, {a})
+    end procedure
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>rid this</eucode>
+--====Constructors
+--<eucode>routine_id(sequence s) : Rid -- assigns type-checked property value</eucode>
+--====Methods
+--<eucode>function func([sequence args]) : object -- executes the function</eucode>
+--<eucode>procedure proc([sequence args]) -- executes the procedure</eucode>
+--*/
+--------------------------------------------------------------------------------
 --==== Defined instances
 --
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.1.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.08.05
+--Status: operational; incomplete
+--Changes:]]]
+--* created
+--* ##div## defined
+--* ##mod## defined
+--* **character** defined
+--* **Character** defined
+--* ##lower## defined
+--* ##upper## defined
+--* **rid** defined
 --------------------------------------------------------------------------------
 --[[[Version: 1.0.0
 --OOEU Versions: 1.9.0 and later
