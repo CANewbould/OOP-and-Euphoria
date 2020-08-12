@@ -8,14 +8,13 @@
 --/*
 --= OOEU Library for the Sequence Class and all derived classes
 ------
---[[[Version: 1.1.1
+--[[[Version: 1.2.0
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
---Date: 2020.08.08
+--Date: 2020.08.12
 --Status: operational; incomplete
 --Changes:]]]
---* addressed knock-on effects of defining **Rid** in //atom.e//
---  had to leave two definitions as-is because of calling issues
+--* **complex** defined
 --
 ------
 --==OOEU Module Library: sequence.e
@@ -25,7 +24,9 @@
 --
 --===Constants
 --===Types
+--* **complex**(**vector**)
 --* **string**(**sequence**)
+--* **vector**(**sequence**)
 --===Routines
 --===Classes (methods)
 --* **Sequence**(**Object**)
@@ -89,6 +90,10 @@ global type vector(sequence str) -- all atoms
         end if
     end for
     return TRUE
+end type
+--------------------------------------------------------------------------------
+global type complex(vector v) -- complex number holder - {real,imaginary}
+    return length(v) = 2
 end type
 --------------------------------------------------------------------------------
 --
@@ -210,6 +215,15 @@ end euclass
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.1.1
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.08.08
+--Status: operational; incomplete
+--Changes:]]]
+--* addressed knock-on effects of defining **Rid** in //atom.e//
+--  had to leave two definitions as-is because of calling issues
 --------------------------------------------------------------------------------
 --[[[Version: 1.1.0
 --OOEU Versions: 1.9.0 and later
