@@ -8,16 +8,15 @@
 --/*
 --= OOEU Library for the Atom Class and all derived classes
 ------
---[[[Version: 1.2.0
+--[[[Version: 1.3.0
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
---Date: 2020.08.08
+--Date: 2020.08.12
 --Status: operational; incomplete
 --Changes:]]]
---* **Rid** defined
---* ##Rid## defined
---* ##func## defined
---* ##proc## defined
+--* ##power## defined
+--* ##square## defined
+--* ##sqrt## defined
 --
 ------
 --==OOEU Module Library: atom.e
@@ -34,7 +33,10 @@
 --* **Atom**(**Object**)
 --** ##Atom##(a) : A
 --** ##abs##() : a
+--** ##power##(a) : a
 --** ##sign##() : i
+--** ##square##() : a
+--** ##sqrt##() : a
 --* **Character**(**Integer**)
 --** ##Character##(c) : C
 --** ##lower##() : c
@@ -107,10 +109,21 @@ global euclass Atom(Object self) -- the type class for all single-valued objects
         else return this
         end if
     end function
+    function power(atom pow) : atom
+        return power(this, pow)
+    end function
     function sign() : integer
         if this < 0 then return -1
         elsif this = 0 then return 0
         else return 1
+        end if
+    end function
+    function square() : atom
+        return this.power(2)
+    end function
+    function sqrt()
+        if this >= 0 then return sqrt(this)
+        else return {0, sqrt(-this)} -- complex (defined in sequence.e)
         end if
     end function
     function Atom(atom a) : Atom
@@ -125,7 +138,10 @@ end euclass
 --<eucode>Atom(atom a) : Atom -- assigns type-checked property value</eucode>
 --====Methods
 --<eucode>abs() : atom -- the absolute value</eucode>
+--<eucode>power(atom pow) : atom -- this raised to pow</eucode>
 --<eucode>sign() : integer -- -1|0|1, depending on the sign</eucode>
+--<eucode>square() : atom -- this squared</eucode>
+--<eucode>sqrt() -- sqrt of this; either atom or complex</eucode>
 --*/
 --------------------------------------------------------------------------------
 global euclass Integer(Atom self) -- single-valued integer objects: extends Atom
@@ -206,6 +222,17 @@ end euclass
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.2.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.08.08
+--Status: operational; incomplete
+--Changes:]]]
+--* **Rid** defined
+--* ##Rid## defined
+--* ##func## defined
+--* ##proc## defined
 --------------------------------------------------------------------------------
 --[[[Version: 1.1.0
 --OOEU Versions: 1.9.0 and later
