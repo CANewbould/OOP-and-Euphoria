@@ -8,13 +8,13 @@
 --/*
 --= Example using OOEU library sequence.e
 ------
---[[[Version: 1.2.0
+--[[[Version: 1.3.0
 --Euphoria Versions: 3.1.1 and later
 --Author: C A Newbould
---Date: 2020.08.08
+--Date: 2020.08.12
 --Status: operational; incomplete
 --Changes:]]]
---* added an App definition & moved former 'Head' into it
+--* added a ##map## to a **Vector**
 --
 ------
 --== Module holding examples of Sequence Objects
@@ -49,6 +49,7 @@ String Low Low = "Transform to Lower-Case: "
 String Rev Rev = "Evens in descending order: "
 String Seq Seq = "The sequence is: "
 String Upp Upp = "Transform to Upper-Case: "
+String Vec Vec = "The run from -5 to +5 in absolute terms is: " --v1.3.0
 --------------------------------------------------------------------------------
 --
 --=== Routines
@@ -74,6 +75,13 @@ function even(Integer n) : boolean
 end function
 constant EVEN = routine_id("even")
 --------------------------------------------------------------------------------
+--v1.3.0 starts
+function abs_(Atom a) : atom
+    return a.abs()
+end function
+constant ABS = routine_id("abs_")
+--v1.3.0 ends
+--------------------------------------------------------------------------------
 --
 --=== Classes
 --
@@ -98,6 +106,7 @@ euclass App(atom self)
         list = Vector(1, 10) l = list.foldr(ADD, 0) l.show("The sum of [1..10] is %d\n")
         Filter.show() list = 2*list list = list.filter(EVEN) list.show()
         list = list.reverse() Rev.show() list.show()
+        list = run(-5,5) Vec.show() list = list.map(ABS) list.show() --v1.3.0
     end procedure
 end euclass
 --------------------------------------------------------------------------------
@@ -108,6 +117,14 @@ seqeg.main("Testing Sequence library") -- execute 'main'
 --*** v1.2.0 ends
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.2.0
+--Euphoria Versions: 3.1.1 and later
+--Author: C A Newbould
+--Date: 2020.08.08
+--Status: operational; incomplete
+--Changes:]]]
+--* added an App definition & moved former 'Head' into it
 --------------------------------------------------------------------------------
 --[[[Version: 1.1.0
 --Euphoria Versions: 3.1.1 and later
