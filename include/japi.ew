@@ -1,0 +1,228 @@
+--------------------------------------------------------------------------------
+-- Library: japi.ew
+--------------------------------------------------------------------------------
+-- Notes:
+--
+--
+--------------------------------------------------------------------------------
+--/*
+--= OOEU Main Library for the Java Application Programming Interface
+------
+--[[[Version: 1.1.1
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.08.27
+--Status: operational; incomplete
+--Changes:]]]
+--  * error in ##Next## corrected
+--  * ##JObject## made global
+--  * ##JFrame## separated
+--  * ##JButton## separated
+--  * ##Next## changed to a method
+--  * **JDialog** defined
+--  * ##JDialog## defined
+--  * ##setSize## defined
+--  * ##settext## renamed as ##setText##
+------
+--==OOEU Main JAPI Library
+--
+-- The following summary gives a short-form indication of the contents of this
+-- module.
+--
+--===Classes (methods)
+--* **JObject**(**Crid**)
+--** ##disable##()
+--** ##next##() : JObject
+--** ##settext##(Str)
+--* **JWidget**(**JObject**)
+--** ##setSize##(i, i)
+--** **JButton**(**JWidget**)
+--*** ##JButton##(JContainer, Str) : JButton
+--* **JContainer**(**JWidget**)
+--** ##pack##()
+--** ##show##()
+--** **JDialog**(**JContainer**)
+--*** ##JDialog##(JContainer, Str) : JDialog
+--** **JFrame**(**JContainer**)
+--*** ##JFrame##(Str) : JFrame
+--
+-- Utilise these features
+-- by adding the following statement to your module:
+--<eucode>include japi.ew</eucode>
+------
+--*/
+--------------------------------------------------------------------------------
+--/*
+--==Interface
+--*/
+--------------------------------------------------------------------------------
+--/*
+--=== Includes
+--*/
+--------------------------------------------------------------------------------
+include japi.e -- for Japi
+    --include sequence.e -- for String
+        --include atom.e -- for Clib, Crid
+--------------------------------------------------------------------------------
+--
+--=== Constants
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+--=== Euphoria types
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+--=== Variables
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+--=== Routines
+--
+--------------------------------------------------------------------------------
+function fC(string pName, sequence cArgs, sequence eArgs, atom ret)
+    Crid self
+    self = Crid(japi, pName, cArgs, ret)
+    return self.func(eArgs)
+end function
+--------------------------------------------------------------------------------
+procedure pC(string pName, sequence cArgs, sequence eArgs)
+    Crid self
+    self = Crid(japi, pName, cArgs, NULL)
+    self.proc(eArgs)
+end procedure
+--------------------------------------------------------------------------------
+--/*
+--=== Classes
+--*/
+--------------------------------------------------------------------------------
+global euclass JObject(Crid self) -- the base JAPI Object class
+    procedure disable()
+        pC("j_disable", {C_INT}, {this})
+    end procedure
+    procedure setText(String text)
+        pC("j_settext", {C_INT, C_POINTER}, {this, text.toC()})
+    end procedure
+    function next() : JObject
+        return fC("j_nextaction", {}, {}, C_INT)
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>handle this</eucode>
+--====Constructors
+--====Methods
+--<eucode>##disable##() -- disables the control</eucode>
+--<eucode>##next##() : JObject -- waits for the next action</eucode>
+--<eucode>##setText##(String text) -- (re)sets the JObject's caption</eucode>
+--*/
+--------------------------------------------------------------------------------
+euclass JWidget(JObject self) -- the JAPI widget class
+    procedure setSize(integer width, integer height)
+        pC("j_setsize", {C_INT, C_INT, C_INT}, {this, width, height})
+    end procedure
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>handle this</eucode>
+--====Constructors
+--====Methods
+--<eucode>##setSize##(integer width, integer height) -- sets the JObject's dimensions</eucode>
+--*/
+--------------------------------------------------------------------------------
+global euclass JButton(JWidget self)
+    function JButton(JObject parent, String label) : JWidget
+        return fC("j_button", {C_INT, C_POINTER}, {parent, label.toC()}, C_INT)
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>handle this</eucode>
+--====Constructors
+--<eucode>##JButton##() : JButton -- a new button widget</eucode>
+--====Methods
+--*/
+--------------------------------------------------------------------------------
+euclass JContainer(JWidget self) -- the JAPI container class
+    procedure pack()
+        pC("j_pack", {C_INT}, {this})
+    end procedure
+    procedure show()
+        pC("j_show", {C_INT}, {this})
+    end procedure
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>handle this</eucode>
+--====Constructors
+--====Methods
+--<eucode>##pack##() -- resizes component to the minimal size of contained widgets</eucode>
+--<eucode>##show##() -- shows the container</eucode>
+--*/
+--------------------------------------------------------------------------------
+global euclass JDialog(JContainer self) -- JAPI dialog class
+    function JDialog(JContainer parent, String text) : JDialog -- a dialog container
+        return fC("j_dialog", {C_INT, C_POINTER}, {parent, text.toC()}, C_INT)
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>handle this</eucode>
+--====Constructors
+--<eucode>function JDialog(JContainer parent, String text) : JDialog -- a dialog container</eucode>
+--====Methods
+--*/
+--------------------------------------------------------------------------------
+global euclass JFrame(JContainer self) -- JAPI top-level window class
+    function JFrame(String text) : JFrame -- the fundamental 'window' container
+        return fC("j_frame", {C_POINTER}, {text.toC()}, C_INT)
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>handle this</eucode>
+--====Constructors
+--<eucode>function JFrame(String text) : JFrame -- the fundamental 'window' container</eucode>
+--====Methods
+--*/
+--------------------------------------------------------------------------------
+--==== Defined instances
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.1.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.08.26
+--Status: operational; incomplete
+--Changes:]]]
+--  * **JContainer** defined
+--  * ##JFrame## defined
+--  * ##show## defined
+--  * ##Next## defined
+--  * ##JButton## defined
+--------------------------------------------------------------------------------
+--[[[Version: 1.0.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.08.25
+--Status: operational; incomplete
+--Changes:]]]
+--  * created
+--  * **JObject** defined
+--  * internal routines fC and pC defined
+--  * ##disable## defined
+--  * ##settext## defined
+--  * **JWidget** outlined
+--------------------------------------------------------------------------------
