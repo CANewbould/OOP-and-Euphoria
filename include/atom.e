@@ -8,15 +8,13 @@
 --/*
 --= OOEU Library for the Atom Class and all derived classes
 ------
---[[[Version: 1.3.0
+--[[[Version: 1.4.1
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
---Date: 2020.08.12
+--Date: 2020.08.27
 --Status: operational; incomplete
 --Changes:]]]
---* ##power## defined
---* ##square## defined
---* ##sqrt## defined
+--* //C_POINTER// defined
 --
 ------
 --==OOEU Module Library: atom.e
@@ -25,8 +23,14 @@
 -- module.
 --
 --===Constants
+--* //C_BOOL//
+--* //C_INT//
+--* //C_POINTER//
+--* //NULL//
 --===Types
 --* **character**(i)
+--* **clib**(a)
+--* **crid**(i)
 --* **rid**(i)
 --===Routines
 --===Classes (methods)
@@ -48,6 +52,12 @@
 --* **Rid**(**Integer**)
 --** ##routine_id##(s) : r
 --** ##func([s]) : o
+--** ##proc##([s])
+--* **Clib**(**Atom**)
+--** ##Clib##(s) : Clib
+--* **Crid**(**Integer**)
+--** ##Crid##(Clib,s,s,a) : Crid
+--** ##func([s]) : a
 --** ##proc##([s])
 --
 -- Utilise these features
@@ -72,8 +82,14 @@ include object.e -- parent
 --=== Constants
 --
 --------------------------------------------------------------------------------
+global constant C_BOOL = #01000004
+global constant C_INT = #01000004
+global constant C_POINTER = #02000004
 constant CHARS = run(9, 13) & run(32, 126)
 constant LOWER = run('a', 'z')
+constant M_DEFINE_C_FUNC = 51
+constant M_OPEN_C_LIB = 50
+global constant NULL = 0
 constant UNSET = -1
 constant UPPER = run('A', 'Z')
 --------------------------------------------------------------------------------
@@ -85,8 +101,16 @@ global type character(integer c) -- control or printable ascii code
     return find(c, CHARS)
 end type
 --------------------------------------------------------------------------------
+global type clib(atom c) -- handle to C-language library
+    return c >= 0
+end type
+--------------------------------------------------------------------------------
+global type crid(integer c) -- C-library routine_id value
+    return c >= UNSET
+end type
+--------------------------------------------------------------------------------
 global type rid(integer r) -- routine_id value
-    return r = UNSET or r >= 0
+    return r >= UNSET
 end type
 --------------------------------------------------------------------------------
 --
@@ -192,18 +216,18 @@ end euclass
 --<eucode>function upper() : character -- upper-case transformation</eucode>
 --*/
 --------------------------------------------------------------------------------
-global euclass Rid(rid self) -- routine_id Objects
+global euclass Rid(Integer self) -- routine_id Objects
     function func() : object
         return call_func(this, {})
     end function
     function func(sequence a) : object
-        return call_func(this, {a})
+        return call_func(this, a)
     end function
     procedure proc()
         call_proc(this, {})
     end procedure
     procedure proc(sequence a)
-        call_proc(this, {a})
+        call_proc(this, a)
     end procedure
 end euclass
 --------------------------------------------------------------------------------
@@ -213,15 +237,85 @@ end euclass
 --====Constructors
 --<eucode>routine_id(sequence s) : Rid -- assigns type-checked property value</eucode>
 --====Methods
---<eucode>function func([sequence args]) : object -- executes the function</eucode>
---<eucode>procedure proc([sequence args]) -- executes the procedure</eucode>
+--<eucode>function func([sequence a]) : object -- executes the function</eucode>
+--<eucode>procedure proc([sequence a]) -- executes the procedure</eucode>
 --*/
 --------------------------------------------------------------------------------
+global euclass Clib(Atom self) -- C-library Objects
+    function Clib(sequence s) : Clib
+        return machine_func(M_OPEN_C_LIB, s)
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>clib this</eucode>
+--====Constructors
+--<eucode>Clib(sequence s) : Clib -- assigns type-checked property value</eucode>
+--====Methods
+--*/
+--------------------------------------------------------------------------------
+global euclass Crid(Integer self) -- C-language routine Objects
+    function func() : atom
+        return c_func(this, {})
+    end function
+    function func(sequence a) : object
+        return c_func(this, a)
+    end function
+    procedure proc()
+        c_proc(this, {})
+    end procedure
+    procedure proc(sequence a)
+        c_proc(this, a)
+    end procedure
+    function Crid(Clib dll, sequence s, sequence a, atom r) : Crid
+        return machine_func(M_DEFINE_C_FUNC, {dll, s, a, r})
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>crid this</eucode>
+--====Constructors
+--<eucode>Crid(Clib dll, sequence s, sequence a, atom r) : Crid -- assigns type-checked property value</eucode>
+--====Methods
+--<eucode>function func([sequence a]) : atom -- executes the function</eucode>
+--<eucode>procedure proc([sequence a]) -- executes the procedure</eucode>
+--*/
+--------------------------------------------------------------------------------
+--
 --==== Defined instances
 --
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.4.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.08.22
+--Status: operational; incomplete
+--Changes:]]]
+--* **clib** defined
+--* **Clib** defined
+--* ##Clib## defined
+--* **crid** defined
+--* **Crid** defined
+--* ##func## defined
+--* ##proc## defined
+--* //C_INT// defined
+--* //C_BOOL// defined
+--* //NULL// defined
+--------------------------------------------------------------------------------
+--[[[Version: 1.3.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.08.12
+--Status: operational; incomplete
+--Changes:]]]
+--* ##power## defined
+--* ##square## defined
+--* ##sqrt## defined
 --------------------------------------------------------------------------------
 --[[[Version: 1.2.0
 --OOEU Versions: 1.9.0 and later
