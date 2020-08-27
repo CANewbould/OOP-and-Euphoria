@@ -1,0 +1,126 @@
+--------------------------------------------------------------------------------
+-- Example: japi.exw
+--------------------------------------------------------------------------------
+-- Notes:
+--
+-- Connected processes are placed together on a single line for clarity
+--------------------------------------------------------------------------------
+--/*
+--= Example using OOEU library japi.e
+------
+--[[[Version: 1.2.1
+--Euphoria Versions: 3.1.1 and later
+--Author: C A Newbould
+--Date: 2020.08.27
+--Status: operational; incomplete
+--Changes:]]]
+--  * changed types and call to reflect changes in //japi.ew//
+--  * added call to ##setSize##
+--  * re-arranged layout
+--  * added JButton, allowing closure via clicking
+--
+------
+--== Module holding examples of Japi Objects
+--
+------
+--*/
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+--=== Includes
+--
+--------------------------------------------------------------------------------
+include japi.ew -- v1.1.0
+--------------------------------------------------------------------------------
+--
+--=== Constants
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+--=== Types
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+--=== Variables
+--
+--------------------------------------------------------------------------------
+String FAILED FAILED = "*** JAPI2 couldn't start ***"
+String QUIT QUIT = "*** JAPI2 ended ***"
+String STARTED STARTED = "*** JAPI2 started ***"
+--------------------------------------------------------------------------------
+--
+--=== Routines
+--
+--------------------------------------------------------------------------------
+procedure go(Japi j) -- this is the action routine
+    JButton b_exit -- v1.2.1
+    JObject event -- v1.2.0
+    JFrame jframe -- v1.2.1
+    j.show("JAPI Library has ID = %d\n") -- temporary for testing only
+    if j.start() then STARTED.show(LF)
+        -- body of process
+        jframe = JFrame("Testing JAPI2") -- v1.2.0
+        jframe.setSize(500, 300) -- v1.2.1
+        b_exit = JButton(jframe, "Click 'X' to close window") -- v1.2.1
+        jframe.show() -- v1.2.0
+        event = 0 -- v1.2.0
+        while event != jframe do -- v1.2.0
+            event = event.next() -- v1.2.1
+            if event = b_exit then exit -- v1.2.1
+            else continue -- v1.2.1
+            end if -- v1.2.1
+        end while -- v1.2.0
+        j.quit()
+        QUIT.show(LF)
+    else FAILED.show(LF)
+    end if
+end procedure
+--------------------------------------------------------------------------------
+procedure main() -- v1.1.0 variable name change: japi to japi2
+    Japi japi2
+    japi2 = Japi("\\dll\\32\\japi2.dll")
+    if japi2 then go(japi2)
+    else -- do nothing
+    end if
+end procedure
+--------------------------------------------------------------------------------
+--
+--=== Classes
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- Execution
+--------------------------------------------------------------------------------
+main()
+--------------------------------------------------------------------------------
+-- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.2.0
+--Euphoria Versions: 3.1.1 and later
+--Author: C A Newbould
+--Date: 2020.08.26
+--Status: operational; incomplete
+--Changes:]]]
+--  * added event-loop
+--  * defined container and displayed it
+--------------------------------------------------------------------------------
+--[[[Version: 1.1.0
+--Euphoria Versions: 3.1.1 and later
+--Author: C A Newbould
+--Date: 2020.08.25
+--Status: operational; incomplete
+--Changes:]]]
+--  * modified to call japi.ew
+--------------------------------------------------------------------------------
+--[[[Version: 1.0.0
+--Euphoria Versions: 3.1.1 and later
+--Author: C A Newbould
+--Date: 2020.08.22
+--Status: operational; incomplete
+--Changes:]]]
+--  * created
+--  * ##main## defined
+--  * ##go## created
+--------------------------------------------------------------------------------
