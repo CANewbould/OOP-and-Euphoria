@@ -8,13 +8,13 @@
 --/*
 --= Example using OOEU library sequence.e
 ------
---[[[Version: 1.3.0
+--[[[Version: 1.4.0
 --Euphoria Versions: 3.1.1 and later
 --Author: C A Newbould
---Date: 2020.08.12
+--Date: 2020.08.22
 --Status: operational; incomplete
 --Changes:]]]
---* added a ##map## to a **Vector**
+--* modified test of ##sum##
 --
 ------
 --== Module holding examples of Sequence Objects
@@ -65,11 +65,6 @@ function toUpper(Character c) : character
 end function
 constant UP = routine_id("toUpper")
 --------------------------------------------------------------------------------
-function add(integer acc, integer n) : integer
-    return acc + n
-end function
-constant ADD = routine_id("add")
---------------------------------------------------------------------------------
 function even(Integer n) : boolean
     return (n.mod(2) = 0)
 end function
@@ -103,7 +98,7 @@ euclass App(atom self)
         l = s.length() l.show("The length is: %d\n")
         Upp.show() transformed = s.map(UP) transformed.show(LF)
         Low.show() transformed = s.map(DOWN) transformed.show(LF)
-        list = Vector(1, 10) l = list.foldr(ADD, 0) l.show("The sum of [1..10] is %d\n")
+        list = Vector(1, 10) l = list.sum() l.show("The sum of [1..10] is %d\n") --v1.4.0
         Filter.show() list = 2*list list = list.filter(EVEN) list.show()
         list = list.reverse() Rev.show() list.show()
         list = run(-5,5) Vec.show() list = list.map(ABS) list.show() --v1.3.0
@@ -117,6 +112,14 @@ seqeg.main("Testing Sequence library") -- execute 'main'
 --*** v1.2.0 ends
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.3.0
+--Euphoria Versions: 3.1.1 and later
+--Author: C A Newbould
+--Date: 2020.08.12
+--Status: operational; incomplete
+--Changes:]]]
+--* added a ##map## to a **Vector**
 --------------------------------------------------------------------------------
 --[[[Version: 1.2.0
 --Euphoria Versions: 3.1.1 and later
