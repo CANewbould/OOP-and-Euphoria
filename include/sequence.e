@@ -8,13 +8,13 @@
 --/*
 --= OOEU Library for the Sequence Class and all derived classes
 ------
---[[[Version: 1.2.0
+--[[[Version: 1.4.0
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
---Date: 2020.08.12
+--Date: 2020.08.25
 --Status: operational; incomplete
 --Changes:]]]
---* **complex** defined
+--* ##toC## (**String**) defined
 --
 ------
 --==OOEU Module Library: sequence.e
@@ -41,9 +41,11 @@
 --** ##String##(str) : Str
 --** ##show()
 --** ##show(b)
+--** ##toC##() : a
 --* **Vector**(**Sequence**)
 --** ##Vector##() : V
 --** ##Vector##(i,i) : V
+--** ##sum##() : a
 --
 -- Utilise these features
 -- by adding the following statement to your module:
@@ -68,6 +70,7 @@ include atom.e -- for types
 --=== Constants
 --*/
 --------------------------------------------------------------------------------
+constant M_ALLOC = 16
 global constant LF = TRUE -- trigger for line-feed
 --------------------------------------------------------------------------------
 --/*
@@ -105,6 +108,10 @@ end type
 --=== Routines
 --
 --------------------------------------------------------------------------------
+function add_(atom ac, atom a)
+    return ac + a
+end function
+constant add = routine_id("add_")
 --------------------------------------------------------------------------------
 --/*
 --=== Classes
@@ -115,7 +122,7 @@ global euclass Sequence(Object self) -- the type class for all multi-valued obje
         sequence result
         result = {}
         for i = 1 to length(this) do
-            if fn.func({this[i]}) then result &= this[i]
+            if call_func(fn, {this[i]}) then result &= this[i]
             else continue
             end if
         end for
@@ -178,6 +185,16 @@ global euclass String(Sequence self) -- all character-based Objects
         end if
         puts(1, this)
     end procedure
+    function toC() : atom
+        atom len, mem
+        len = this.length()
+        mem = machine_func(M_ALLOC, len + 1) -- Thanks to Igor
+        if mem then
+    		poke(mem, this)
+    		poke(mem + len, 0)  -- Thanks to Aku
+        end if
+        return mem
+    end function
     function String(string str) : string
         return str
     end function
@@ -193,6 +210,9 @@ end euclass
 --*/
 --------------------------------------------------------------------------------
 global euclass Vector(Sequence self) -- all-atom array Objects
+    function sum() : atom
+        return this.foldr(add, 0)
+    end function
     function Vector(vector v) : Vector
         return v
     end function
@@ -208,6 +228,7 @@ end euclass
 --<eucode>Vector(vector v) : Vector -- assigns type-checked property value</eucode>
 --<eucode>Vector(integer s, integer f) : Vector -- {s..f}</eucode>
 --====Methods
+--<eucode>function sum() : atom -- the sum of all the elements</eucode>
 --*/
 --------------------------------------------------------------------------------
 --==== Defined instances
@@ -215,6 +236,22 @@ end euclass
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.3.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.08.22
+--Status: operational; incomplete
+--Changes:]]]
+--* ##sum## defined
+--------------------------------------------------------------------------------
+--[[[Version: 1.2.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.08.12
+--Status: operational; incomplete
+--Changes:]]]
+--* **complex** defined
 --------------------------------------------------------------------------------
 --[[[Version: 1.1.1
 --OOEU Versions: 1.9.0 and later
