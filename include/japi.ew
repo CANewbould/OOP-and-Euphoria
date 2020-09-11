@@ -8,21 +8,20 @@
 --/*
 --= OOEU Main Library for the Java Application Programming Interface
 ------
---[[[Version: 1.1.1
+--[[[Version: 1.2.0
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
---Date: 2020.08.27
+--Date: 2020.09.11
 --Status: operational; incomplete
 --Changes:]]]
---  * error in ##Next## corrected
---  * ##JObject## made global
---  * ##JFrame## separated
---  * ##JButton## separated
---  * ##Next## changed to a method
---  * **JDialog** defined
---  * ##JDialog## defined
---  * ##setSize## defined
---  * ##settext## renamed as ##setText##
+--  * ##addTo## defined
+--  * ##setPos## defined
+--  * ##show## moved
+--  * ##JWindow## defined
+--  * ##JCanvas## defined
+--  * ##enable## defined
+--  * ##JPanel## defined
+--  * ##JLabel## defined
 ------
 --==OOEU Main JAPI Library
 --
@@ -32,19 +31,30 @@
 --===Classes (methods)
 --* **JObject**(**Crid**)
 --** ##disable##()
+--** ##enable##()
 --** ##next##() : JObject
 --** ##settext##(Str)
 --* **JWidget**(**JObject**)
+--** ##addTo##(JContainer)
+--** ##setPos##(i, i)
 --** ##setSize##(i, i)
+--** ##show##()
 --** **JButton**(**JWidget**)
 --*** ##JButton##(JContainer, Str) : JButton
+--** **JCanvas**(**JWidget**)
+--*** ##JCanvas##(JContainer, i, i) : JCanvas
+--** **JLabel**(**JWidget**)
+--*** ##JLabel##(JContainer, Str) : JLabel
 --* **JContainer**(**JWidget**)
 --** ##pack##()
---** ##show##()
 --** **JDialog**(**JContainer**)
 --*** ##JDialog##(JContainer, Str) : JDialog
 --** **JFrame**(**JContainer**)
 --*** ##JFrame##(Str) : JFrame
+--** **JPanel**(**JContainer**)
+--*** ##JPanel##(JContainer) : JPanel
+--** **JWindow**(**JContainer**)
+--*** ##JWindow##(JContainer) : JWindow
 --
 -- Utilise these features
 -- by adding the following statement to your module:
@@ -103,6 +113,9 @@ global euclass JObject(Crid self) -- the base JAPI Object class
     procedure disable()
         pC("j_disable", {C_INT}, {this})
     end procedure
+    procedure enable()
+        pC("j_enable", {C_INT}, {this})
+    end procedure
     procedure setText(String text)
         pC("j_settext", {C_INT, C_POINTER}, {this, text.toC()})
     end procedure
@@ -117,41 +130,20 @@ end euclass
 --====Constructors
 --====Methods
 --<eucode>##disable##() -- disables the control</eucode>
+--<eucode>##enable##() -- enables the control</eucode>
 --<eucode>##next##() : JObject -- waits for the next action</eucode>
 --<eucode>##setText##(String text) -- (re)sets the JObject's caption</eucode>
 --*/
 --------------------------------------------------------------------------------
 euclass JWidget(JObject self) -- the JAPI widget class
+    procedure addTo(JObject parent)
+        pC("j_add", {C_INT, C_INT}, {this, parent})
+    end procedure
+    procedure setPos(integer xpos, integer ypos)
+        pC("j_setpos", {C_INT, C_INT, C_INT}, {this, xpos, ypos})
+    end procedure
     procedure setSize(integer width, integer height)
         pC("j_setsize", {C_INT, C_INT, C_INT}, {this, width, height})
-    end procedure
-end euclass
---------------------------------------------------------------------------------
---/*
---====Property
---<eucode>handle this</eucode>
---====Constructors
---====Methods
---<eucode>##setSize##(integer width, integer height) -- sets the JObject's dimensions</eucode>
---*/
---------------------------------------------------------------------------------
-global euclass JButton(JWidget self)
-    function JButton(JObject parent, String label) : JWidget
-        return fC("j_button", {C_INT, C_POINTER}, {parent, label.toC()}, C_INT)
-    end function
-end euclass
---------------------------------------------------------------------------------
---/*
---====Property
---<eucode>handle this</eucode>
---====Constructors
---<eucode>##JButton##() : JButton -- a new button widget</eucode>
---====Methods
---*/
---------------------------------------------------------------------------------
-euclass JContainer(JWidget self) -- the JAPI container class
-    procedure pack()
-        pC("j_pack", {C_INT}, {this})
     end procedure
     procedure show()
         pC("j_show", {C_INT}, {this})
@@ -163,8 +155,66 @@ end euclass
 --<eucode>handle this</eucode>
 --====Constructors
 --====Methods
+--<eucode>##add##(JObject parent) -- adds the widget to the parent(Container)</eucode>
+--<eucode>##setPos##(integer xpos, integer ypos) -- sets the JObject's position on the screen</eucode>
+--<eucode>##setSize##(integer width, integer height) -- sets the JObject's dimensions</eucode>
+--<eucode>##show##() -- shows the widget</eucode>
+--*/
+--------------------------------------------------------------------------------
+global euclass JButton(JWidget self)
+    function JButton(JObject parent, String label) : JButton
+        return fC("j_button", {C_INT, C_POINTER}, {parent, label.toC()}, C_INT)
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>handle this</eucode>
+--====Constructors
+--<eucode>##JButton##(JContainer parent, String label) : JButton -- a new button widget</eucode>
+--====Methods
+--*/
+--------------------------------------------------------------------------------
+global euclass JCanvas(JWidget self)
+    function JCanvas(JObject parent, integer width, integer height) : JCanvas
+        return fC("j_canvas", {C_INT, C_INT, C_INT}, {parent, width, height}, C_INT)
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>handle this</eucode>
+--====Constructors
+--<eucode>##JCanvas##(JContainer parent, integer width, integer height) : JCanvas -- a new canvas with set dimensions</eucode>
+--====Methods
+--*/
+--------------------------------------------------------------------------------
+global euclass JLabel(JWidget self)
+    function JLabel(JObject parent, String label) : JLabel
+        return fC("j_label", {C_INT, C_POINTER}, {parent, label.toC()}, C_INT)
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>handle this</eucode>
+--====Constructors
+--<eucode>##JLabel##(JContainer parent, String label) : JLabel -- a new label widget</eucode>
+--====Methods
+--*/
+--------------------------------------------------------------------------------
+euclass JContainer(JWidget self) -- the JAPI container class
+    procedure pack()
+        pC("j_pack", {C_INT}, {this})
+    end procedure
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>handle this</eucode>
+--====Constructors
+--====Methods
 --<eucode>##pack##() -- resizes component to the minimal size of contained widgets</eucode>
---<eucode>##show##() -- shows the container</eucode>
 --*/
 --------------------------------------------------------------------------------
 global euclass JDialog(JContainer self) -- JAPI dialog class
@@ -195,11 +245,55 @@ end euclass
 --====Methods
 --*/
 --------------------------------------------------------------------------------
+global euclass JPanel(JContainer self) -- JAPI panel class
+    function JPanel(JContainer parent) : JPanel -- a panel container
+        return fC("j_panel", {C_INT}, {parent}, C_INT)
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>handle this</eucode>
+--====Constructors
+--<eucode>function JPanel(JContainer parent) : JPanel -- a panel container</eucode>
+--====Methods
+--*/
+--------------------------------------------------------------------------------
+global euclass JWindow(JContainer self) -- JAPI window class
+    function JWindow(JContainer parent) : JWindow -- a window container
+        return fC("j_window", {C_INT}, {parent}, C_INT)
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>handle this</eucode>
+--====Constructors
+--<eucode>function JWindow(JContainer parent) : JWindow -- a window container</eucode>
+--====Methods
+--*/
+--------------------------------------------------------------------------------
 --==== Defined instances
 --
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.1.1
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.08.27
+--Status: operational; incomplete
+--Changes:]]]
+--  * error in ##Next## corrected
+--  * ##JObject## made global
+--  * ##JFrame## separated
+--  * ##JButton## separated
+--  * ##Next## changed to a method
+--  * **JDialog** defined
+--  * ##JDialog## defined
+--  * ##setSize## defined
+--  * ##settext## renamed as ##setText##
 --------------------------------------------------------------------------------
 --[[[Version: 1.1.0
 --OOEU Versions: 1.9.0 and later
