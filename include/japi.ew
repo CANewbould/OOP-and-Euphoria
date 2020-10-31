@@ -8,20 +8,15 @@
 --/*
 --= OOEU Main Library for the Java Application Programming Interface
 ------
---[[[Version: 1.2.0
+--[[[Version: 1.5.0
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
---Date: 2020.09.11
+--Date: 2020.09.15
 --Status: operational; incomplete
 --Changes:]]]
---  * ##addTo## defined
---  * ##setPos## defined
---  * ##show## moved
---  * ##JWindow## defined
---  * ##JCanvas## defined
---  * ##enable## defined
---  * ##JPanel## defined
---  * ##JLabel## defined
+--  * **JMenuItem** defined
+--  * ##JMenuItem## defined
+--  * ##JSeparator##(**JMenu**) defined
 ------
 --==OOEU Main JAPI Library
 --
@@ -31,11 +26,19 @@
 --===Classes (methods)
 --* **JObject**(**Crid**)
 --** ##disable##()
+--** ##dispose##()
 --** ##enable##()
+--** ##getParent##()
 --** ##next##() : JObject
---** ##settext##(Str)
+--** ##setText##(Str)
 --* **JWidget**(**JObject**)
 --** ##addTo##(JContainer)
+--** ##getHeight##()
+--** ##getWidth##()
+--** ##setBackColo[u]r##(i, i, i)
+--** ##setBorderPos##(i)
+--** ##setColor(i, i, i)
+--** ##setColour(i, i, i)
 --** ##setPos##(i, i)
 --** ##setSize##(i, i)
 --** ##show##()
@@ -43,10 +46,17 @@
 --*** ##JButton##(JContainer, Str) : JButton
 --** **JCanvas**(**JWidget**)
 --*** ##JCanvas##(JContainer, i, i) : JCanvas
+--** **JCheckbox**(**JWidget**)
+--*** ##JCheckbox##(JContainer, Str) : JCheckbox
 --** **JLabel**(**JWidget**)
 --*** ##JLabel##(JContainer, Str) : JLabel
 --* **JContainer**(**JWidget**)
 --** ##pack##()
+--** ##setHgap(i)
+--** ##setLayout##([i][,i])
+--** ##setVgap(i)
+--** **JBorderpanel**(**JContainer**)
+--*** ##JBorderpanel##(i) : JBorderpanel
 --** **JDialog**(**JContainer**)
 --*** ##JDialog##(JContainer, Str) : JDialog
 --** **JFrame**(**JContainer**)
@@ -55,6 +65,15 @@
 --*** ##JPanel##(JContainer) : JPanel
 --** **JWindow**(**JContainer**)
 --*** ##JWindow##(JContainer) : JWindow
+--** **JMessagebox**(**JObject**)
+--*** ##JMessagebox##(JFrame, Str, Str) : JMessagebox
+--** **JMenubar**(**integer**)
+--*** ##JMenubar##(JContainer) : JMenubar
+--** **JMenu**(**JObject**)
+--*** ##JMenu##(JContainer, Str) : JMenu
+--*** ##JSeparator##()
+--** **JMenuitem##(**JObject**)
+--*** ##JMenuitem(JMenu, Str) : JMenuitem
 --
 -- Utilise these features
 -- by adding the following statement to your module:
@@ -74,10 +93,38 @@ include japi.e -- for Japi
     --include sequence.e -- for String
         --include atom.e -- for Clib, Crid
 --------------------------------------------------------------------------------
---
+--/*
 --=== Constants
---
+--*/
 --------------------------------------------------------------------------------
+--/*
+--==== Border Layout: alignment
+--*/
+global constant J_LEFT = 0
+global constant J_CENTER = 1
+global constant J_CENTRE = J_CENTER
+global constant J_RIGHT = 2
+global constant J_TOP = 3
+global constant J_BOTTOM = 4
+global constant J_TOPLEFT = 5
+global constant J_TOPRIGHT = 6
+global constant J_BOTTOMLEFT = 7
+global constant J_BOTTOMRIGHT = 8
+    --------------------------------------------------------------------------------
+--/*
+--====  Flow Layout: alignment
+--*/
+global constant J_HORIZONTAL = 0
+global constant J_VERTICAL = 1
+--------------------------------------------------------------------------------
+--/*
+--====  Border-Panel: style
+--*/
+global constant J_NONE = 0
+global constant J_LINEDOWN = 1
+global constant J_LINEUP = 2
+global constant J_AREADOWN = 3
+global constant J_AREAUP = 4
 --------------------------------------------------------------------------------
 --
 --=== Euphoria types
@@ -90,7 +137,7 @@ include japi.e -- for Japi
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 --
---=== Routines
+--=== Service routines
 --
 --------------------------------------------------------------------------------
 function fC(string pName, sequence cArgs, sequence eArgs, atom ret)
@@ -113,24 +160,31 @@ global euclass JObject(Crid self) -- the base JAPI Object class
     procedure disable()
         pC("j_disable", {C_INT}, {this})
     end procedure
+    procedure dispose()
+        pC("j_dispose", {C_INT}, {this})
+    end procedure
     procedure enable()
         pC("j_enable", {C_INT}, {this})
     end procedure
-    procedure setText(String text)
-        pC("j_settext", {C_INT, C_POINTER}, {this, text.toC()})
-    end procedure
+    function getParent()
+        return fC("j_getparent", {C_INT}, {this}, C_INT)
+    end function
     function next() : JObject
         return fC("j_nextaction", {}, {}, C_INT)
     end function
+    procedure setText(String text)
+        pC("j_settext", {C_INT, C_POINTER}, {this, text.toC()})
+    end procedure
 end euclass
 --------------------------------------------------------------------------------
 --/*
 --====Property
 --<eucode>handle this</eucode>
---====Constructors
 --====Methods
 --<eucode>##disable##() -- disables the control</eucode>
+--<eucode>##dispose##() -- releases the control's resources</eucode>
 --<eucode>##enable##() -- enables the control</eucode>
+--<eucode>##getParent##() -- returns the handle of the parent container</eucode>
 --<eucode>##next##() : JObject -- waits for the next action</eucode>
 --<eucode>##setText##(String text) -- (re)sets the JObject's caption</eucode>
 --*/
@@ -138,6 +192,27 @@ end euclass
 euclass JWidget(JObject self) -- the JAPI widget class
     procedure addTo(JObject parent)
         pC("j_add", {C_INT, C_INT}, {this, parent})
+    end procedure
+    function getHeight()
+        return fC("j_getheight", {C_INT}, {this}, C_INT)
+    end function
+    function getWidth()
+        return fC("j_getwidth", {C_INT}, {this}, C_INT)
+    end function
+    procedure setBackColor(integer r, integer g, integer b)
+        pC("j_setcolorbg", {C_INT, C_INT, C_INT, C_INT}, {this, r, g, b})
+    end procedure
+    procedure setBackColour(integer r, integer g, integer b)
+        this.setBackColor(r, g, b)
+    end procedure
+    procedure setBorderPos(integer pos)
+        pC("j_setborderpos", {C_INT, C_INT}, {this, pos})
+    end procedure
+    procedure setColor(integer r, integer g, integer b)
+        pC("j_setcolor", {C_INT, C_INT, C_INT, C_INT}, {this, r, g, b})
+    end procedure
+    procedure setColour(integer r, integer g, integer b)
+        this.setColor(r, g, b)
     end procedure
     procedure setPos(integer xpos, integer ypos)
         pC("j_setpos", {C_INT, C_INT, C_INT}, {this, xpos, ypos})
@@ -153,11 +228,15 @@ end euclass
 --/*
 --====Property
 --<eucode>handle this</eucode>
---====Constructors
 --====Methods
 --<eucode>##add##(JObject parent) -- adds the widget to the parent(Container)</eucode>
---<eucode>##setPos##(integer xpos, integer ypos) -- sets the JObject's position on the screen</eucode>
---<eucode>##setSize##(integer width, integer height) -- sets the JObject's dimensions</eucode>
+--<eucode>##getHeight##() -- returns the height of the widget</eucode>
+--<eucode>##getWidth##() -- returns the width of the widget</eucode>
+--<eucode>##setBackColo[u]r##(integer r, integer g, integer b) -- sets the JWidget's backgound colour as {r,g,b}</eucode>
+--<eucode>##setBorderPos##(integer pos) -- sets the JWidget's location within the border</eucode>
+--<eucode>##setColo[u]r##(integer r, integer g, integer b) -- sets the JWidget's foregound colour as {r,g,b}</eucode>
+--<eucode>##setPos##(integer xpos, integer ypos) -- sets the JWidget's position on the screen</eucode>
+--<eucode>##setSize##(integer width, integer height) -- sets the JWidget's dimensions</eucode>
 --<eucode>##show##() -- shows the widget</eucode>
 --*/
 --------------------------------------------------------------------------------
@@ -172,7 +251,6 @@ end euclass
 --<eucode>handle this</eucode>
 --====Constructors
 --<eucode>##JButton##(JContainer parent, String label) : JButton -- a new button widget</eucode>
---====Methods
 --*/
 --------------------------------------------------------------------------------
 global euclass JCanvas(JWidget self)
@@ -186,7 +264,19 @@ end euclass
 --<eucode>handle this</eucode>
 --====Constructors
 --<eucode>##JCanvas##(JContainer parent, integer width, integer height) : JCanvas -- a new canvas with set dimensions</eucode>
---====Methods
+--*/
+--------------------------------------------------------------------------------
+global euclass JCheckbox(JWidget self)
+    function JCheckbox(JObject parent, String label) : JCheckbox
+        return fC("j_checkbox", {C_INT, C_POINTER}, {parent, label.toC()}, C_INT)
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>handle this</eucode>
+--====Constructors
+--<eucode>##JCheckbox##(JContainer parent, String label) : JCheckbox -- a new check-box widget</eucode>
 --*/
 --------------------------------------------------------------------------------
 global euclass JLabel(JWidget self)
@@ -200,21 +290,52 @@ end euclass
 --<eucode>handle this</eucode>
 --====Constructors
 --<eucode>##JLabel##(JContainer parent, String label) : JLabel -- a new label widget</eucode>
---====Methods
 --*/
 --------------------------------------------------------------------------------
 euclass JContainer(JWidget self) -- the JAPI container class
     procedure pack()
         pC("j_pack", {C_INT}, {this})
     end procedure
+    procedure setHgap(integer gap)
+        pC("j_sethgap", {C_INT, C_INT}, {this, gap})
+    end procedure
+        procedure setLayout()
+        pC("j_setborderlayout", {C_INT}, {this})
+    end procedure
+    procedure setLayout(integer align)
+        pC("j_setflowlayout", {C_INT, C_INT}, {this, align})
+    end procedure
+    procedure setLayout(integer row, integer col)
+        pC("j_setgridlayout", {C_INT, C_INT, C_INT}, {this, row, col})
+    end procedure
+    procedure setVgap(integer gap)
+        pC("j_setvgap", {C_INT, C_INT}, {this, gap})
+    end procedure
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>handle this</eucode>
+--====Methods
+--<eucode>##pack##() -- resizes component to the minimal size of contained widgets</eucode>
+--<eucode>##setHgap##(integer gap) -- defines the horizontal gap between contained widgets</eucode>
+--<eucode>##setLayout() -- adds a border layout manager to the container</eucode>
+--<eucode>##setLayout(integer align) -- adds a flow layout manager to the container</eucode>
+--<eucode>##setLayout(integer row, integer col) -- adds a grid layout manager to the container</eucode>
+--<eucode>##setVgap##(integer gap) -- defines the vertical gap between contained widgets</eucode>
+--*/
+--------------------------------------------------------------------------------
+global euclass JBorderpanel(JContainer self) -- JAPI border-panel class
+    function JBorderpanel(JContainer parent, integer typ)
+        return fC("j_borderpanel", {C_INT, C_INT}, {parent, typ}, C_INT)
+    end function
 end euclass
 --------------------------------------------------------------------------------
 --/*
 --====Property
 --<eucode>handle this</eucode>
 --====Constructors
---====Methods
---<eucode>##pack##() -- resizes component to the minimal size of contained widgets</eucode>
+--<eucode>function JBorderpanel(JContainer parent, String text) : JBorderpanel -- a border-panel container</eucode>
 --*/
 --------------------------------------------------------------------------------
 global euclass JDialog(JContainer self) -- JAPI dialog class
@@ -228,7 +349,6 @@ end euclass
 --<eucode>handle this</eucode>
 --====Constructors
 --<eucode>function JDialog(JContainer parent, String text) : JDialog -- a dialog container</eucode>
---====Methods
 --*/
 --------------------------------------------------------------------------------
 global euclass JFrame(JContainer self) -- JAPI top-level window class
@@ -242,7 +362,6 @@ end euclass
 --<eucode>handle this</eucode>
 --====Constructors
 --<eucode>function JFrame(String text) : JFrame -- the fundamental 'window' container</eucode>
---====Methods
 --*/
 --------------------------------------------------------------------------------
 global euclass JPanel(JContainer self) -- JAPI panel class
@@ -256,7 +375,6 @@ end euclass
 --<eucode>handle this</eucode>
 --====Constructors
 --<eucode>function JPanel(JContainer parent) : JPanel -- a panel container</eucode>
---====Methods
 --*/
 --------------------------------------------------------------------------------
 global euclass JWindow(JContainer self) -- JAPI window class
@@ -270,14 +388,125 @@ end euclass
 --<eucode>handle this</eucode>
 --====Constructors
 --<eucode>function JWindow(JContainer parent) : JWindow -- a window container</eucode>
---====Methods
 --*/
 --------------------------------------------------------------------------------
+global euclass JMessagebox(JObject self) -- JAPI message-box class
+    function JMessagebox(JFrame parent, String title, String text) : JMessagebox
+        return fC("j_messagebox", {C_INT, C_POINTER, C_POINTER},
+                    {parent, title.toC(), text.toC()}, C_INT)
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Constructors
+--<eucode>function JMessagebox(JFrame parent, String title, String text) : JMessagebox</eucode>
+--*/
+--------------------------------------------------------------------------------
+global euclass JMenubar(integer self) -- the menubar class
+    function JMenubar(JFrame parent) : JMenubar
+        return fC("j_menubar", {C_INT}, {parent}, C_INT)
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>handle this</eucode>
+--====Constructors
+--<eucode>function JMenubar(JFrame parent) : JMenubar</eucode>
+--*/
+--------------------------------------------------------------------------------
+global euclass JMenu(JObject self) -- the menu class
+    procedure JSeparator()
+        pC("j_seperator", {C_INT}, {this})
+    end procedure
+    function JMenu(JMenubar parent, String str) : JMenu
+        return fC("j_menu", {C_INT, C_POINTER}, {parent, str.toC()}, C_INT)
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>handle this</eucode>
+--====Constructors
+--<eucode>function JMenu(JFrame parent, String str) : JMenu</eucode>
+--====Methods
+--<eucode>procedure JSeparator() -- adds a separator bar to the menu</eucode>
+--*/
+--------------------------------------------------------------------------------
+global euclass JMenuitem(JObject self) -- the menu item class
+    function JMenuitem(JMenu parent, String label): JMenuitem
+        return fC("j_menuitem", {C_INT, C_POINTER}, {parent, label.toC()}, C_INT)
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>handle this</eucode>
+--====Constructors
+--<eucode>function JMenuitem(JMenu parent, String label) : JMenuitem</eucode>
+--*/
+--------------------------------------------------------------------------------
+--
 --==== Defined instances
 --
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.4.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.09.14
+--Status: operational; incomplete
+--Changes:]]]
+--  * ##JMenubar## defined
+--  * ##JMenu## defined
+--------------------------------------------------------------------------------
+--[[[Version: 1.3.1
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.09.13
+--Status: operational; incomplete
+--Changes:]]]
+--  * ##setBorderPos## defined
+--  * associated constants defined
+--  * ##setColo[u]r## defined
+--  * ##setBackColo[u]r## defined
+--  * ##getWidth## defined
+--  * ##getHeight## defined
+--  * ##getParent## defined
+--------------------------------------------------------------------------------
+--[[[Version: 1.3.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.09.12
+--Status: operational; incomplete
+--Changes:]]]
+--  * ##setLayout## defined
+--  * associated constants added
+--  * **JCheckbox** defined
+--  * ##dispose## defined
+--  * **JBorderpanel** defined
+--  * associated constants added
+--  * **JMessagebox** defined
+--  * ##JMessagebox## defined
+--  * ##setHgap## defined
+--  * ##setVgap## defined
+--------------------------------------------------------------------------------
+--[[[Version: 1.2.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.09.11
+--Status: operational; incomplete
+--Changes:]]]
+--  * ##addTo## defined
+--  * ##setPos## defined
+--  * ##show## moved
+--  * ##JWindow## defined
+--  * ##JCanvas## defined
+--  * ##enable## defined
+--  * ##JPanel## defined
+--  * ##JLabel## defined
 --------------------------------------------------------------------------------
 --[[[Version: 1.1.1
 --OOEU Versions: 1.9.0 and later
