@@ -8,13 +8,13 @@
 --/*
 --= OOEU Library for the Atom Class and all derived classes
 ------
---[[[Version: 1.4.1
+--[[[Version: 1.5.0
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
---Date: 2020.08.27
+--Date: 2020.10.30
 --Status: operational; incomplete
 --Changes:]]]
---* //C_POINTER// defined
+--* ##toString## defined
 --
 ------
 --==OOEU Module Library: atom.e
@@ -41,6 +41,7 @@
 --** ##sign##() : i
 --** ##square##() : a
 --** ##sqrt##() : a
+--** ##toString##(s) : s
 --* **Character**(**Integer**)
 --** ##Character##(c) : C
 --** ##lower##() : c
@@ -150,6 +151,9 @@ global euclass Atom(Object self) -- the type class for all single-valued objects
         else return {0, sqrt(-this)} -- complex (defined in sequence.e)
         end if
     end function
+    function toString(sequence fmt)
+        return sprintf(fmt, this)
+    end function
     function Atom(atom a) : Atom
         return a -- type-checking
     end function
@@ -166,6 +170,7 @@ end euclass
 --<eucode>sign() : integer -- -1|0|1, depending on the sign</eucode>
 --<eucode>square() : atom -- this squared</eucode>
 --<eucode>sqrt() -- sqrt of this; either atom or complex</eucode>
+--<eucode>toString(string fmt) : string -- the value as a formatted string</eucode>
 --*/
 --------------------------------------------------------------------------------
 global euclass Integer(Atom self) -- single-valued integer objects: extends Atom
@@ -289,6 +294,14 @@ end euclass
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.4.1
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.08.27
+--Status: operational; incomplete
+--Changes:]]]
+--* //C_POINTER// defined
 --------------------------------------------------------------------------------
 --[[[Version: 1.4.0
 --OOEU Versions: 1.9.0 and later
