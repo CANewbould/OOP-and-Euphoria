@@ -8,19 +8,19 @@
 --/*
 --= Example using OOEU library japi.e
 ------
---[[[Version: 1.2.1
+--[[[Version: 1.2.2
 --Euphoria Versions: 3.1.1 and later
 --Author: C A Newbould
---Date: 2020.08.27
+--Date: 2020.09.12
 --Status: operational; incomplete
 --Changes:]]]
---  * changed types and call to reflect changes in //japi.ew//
---  * added call to ##setSize##
---  * re-arranged layout
---  * added JButton, allowing closure via clicking
+--  * added inoperative button
+--  * set layout to (horizontal) "flow"
 --
 ------
 --== Module holding examples of Japi Objects
+--
+-- This example is mainly to test the basics of JAPI: start; create; show; quit.
 --
 ------
 --*/
@@ -56,14 +56,17 @@ String STARTED STARTED = "*** JAPI2 started ***"
 --------------------------------------------------------------------------------
 procedure go(Japi j) -- this is the action routine
     JButton b_exit -- v1.2.1
+    JButton b_nothing -- v1.2.2
     JObject event -- v1.2.0
     JFrame jframe -- v1.2.1
     j.show("JAPI Library has ID = %d\n") -- temporary for testing only
     if j.start() then STARTED.show(LF)
         -- body of process
         jframe = JFrame("Testing JAPI2") -- v1.2.0
-        jframe.setSize(500, 300) -- v1.2.1
+        jframe.setSize(400, 300) -- v1.2.1
         b_exit = JButton(jframe, "Click 'X' to close window") -- v1.2.1
+        b_nothing = JButton(jframe, "I am useless") -- v1.2.2
+        jframe.setLayout(J_HORIZONTAL) -- v1.2.2
         jframe.show() -- v1.2.0
         event = 0 -- v1.2.0
         while event != jframe do -- v1.2.0
@@ -96,6 +99,17 @@ end procedure
 main()
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.2.1
+--Euphoria Versions: 3.1.1 and later
+--Author: C A Newbould
+--Date: 2020.08.27
+--Status: operational; incomplete
+--Changes:]]]
+--  * changed types and call to reflect changes in //japi.ew//
+--  * added call to ##setSize##
+--  * re-arranged layout
+--  * added JButton, allowing closure via clicking
 --------------------------------------------------------------------------------
 --[[[Version: 1.2.0
 --Euphoria Versions: 3.1.1 and later
