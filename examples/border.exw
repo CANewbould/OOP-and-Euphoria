@@ -1,0 +1,102 @@
+--------------------------------------------------------------------------------
+-- Example: border.exw
+--------------------------------------------------------------------------------
+-- Notes:
+--
+--
+--------------------------------------------------------------------------------
+--/*
+--= JAPI example of a border layout manager applied to a frame
+------
+--[[[Version: 1.0.0
+--Euphoria Versions: 3.1.1 and later
+--Author: C A Newbould
+--Date: 2020.09.13
+--Status: operational; complete
+--Changes:]]]
+--  * created
+--
+------
+--*/
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+--=== Includes
+--
+--------------------------------------------------------------------------------
+include japi.ew
+--------------------------------------------------------------------------------
+--
+--=== Constants
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+--=== Types
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+--=== Variables
+--
+--------------------------------------------------------------------------------
+String Failed Failed = "*** JAPI2 couldn't start ***"
+String NotFound NotFound = "*** JAPI2 Library not found ***"
+--------------------------------------------------------------------------------
+--
+--=== Routines
+--
+--------------------------------------------------------------------------------
+procedure go(Japi j)
+    JButton jbutton1, jbutton2, jbutton3, jbutton4, jbutton5
+    JObject event
+    JFrame jframe
+    if j.start() then 
+        jframe = JFrame("Simple Border Layout Demo")
+        jframe.setLayout() -- border
+        jbutton1 = JButton(jframe, "Right")
+        jbutton2 = JButton(jframe, "Left")
+        jbutton3 = JButton(jframe, "Bottom")
+        jbutton4 = JButton(jframe, "Top")
+        jbutton5 = JButton(jframe, "Centre")
+        jframe.setHgap(20)
+        jframe.setVgap(20)
+        jbutton1.setSize(200, 200)
+        jbutton2.setSize(200, 200)
+        jbutton1.setBorderPos(J_RIGHT)
+        jbutton2.setBorderPos(J_LEFT)
+        jbutton3.setBorderPos(J_BOTTOM)
+        jbutton4.setBorderPos(J_TOP)
+        jbutton5.setBorderPos(J_CENTRE)
+        jframe.pack()
+        jframe.show()
+        event = 0
+        while event != jframe do
+            event = event.next()
+        end while
+        j.quit()
+    else Failed.show(LF)
+    end if
+end procedure
+--------------------------------------------------------------------------------
+procedure main()
+    Japi japi2
+    japi2 = Japi("\\dll\\32\\japi2.dll")
+    if japi2 then go(japi2)
+    else NotFound.show(LF)
+    end if
+end procedure
+--------------------------------------------------------------------------------
+--
+--=== Classes
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- Execution
+--------------------------------------------------------------------------------
+main()
+--------------------------------------------------------------------------------
+-- Previous versions
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+    

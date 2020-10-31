@@ -1,0 +1,107 @@
+--------------------------------------------------------------------------------
+-- Example: grid.exw
+--------------------------------------------------------------------------------
+-- Notes:
+--
+--
+--------------------------------------------------------------------------------
+--/*
+--= JAPI example of a grid layout manager applied to a frame
+------
+--[[[Version: 1.0.1
+--Euphoria Versions: 3.1.1 and later
+--Author: C A Newbould
+--Date: 2020.09.13
+--Status: operational; complete
+--Changes:]]]
+--  * made button1 close
+--  * added colour effects (background & foreground)
+--
+------
+--*/
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+--=== Includes
+--
+--------------------------------------------------------------------------------
+include japi.ew
+--------------------------------------------------------------------------------
+--
+--=== Constants
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+--=== Types
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+--=== Variables
+--
+--------------------------------------------------------------------------------
+String Failed Failed = "*** JAPI2 couldn't start ***"
+String NotFound NotFound = "*** JAPI2 Library not found ***"
+--------------------------------------------------------------------------------
+--
+--=== Routines
+--
+--------------------------------------------------------------------------------
+procedure go(Japi j)
+    JButton jbutton1, jbutton2, jbutton3, jbutton4
+    JObject event
+    JFrame jframe
+    if j.start() then 
+        jframe = JFrame("Simple Grid Layout Demo")
+        jframe.setLayout(2,2) -- 2x2 grid
+        jbutton1 = JButton(jframe, "Button1 - can close")
+        jbutton2 = JButton(jframe, "Button2")
+        jbutton3 = JButton(jframe, "Button3")
+        jbutton4 = JButton(jframe, "Button4")
+        jframe.setBackColour(150, 0, 0)
+        jbutton4.setColour(0, 150, 0)
+        jframe.setHgap(20)
+        jframe.setVgap(20)
+        jbutton1.setSize(200, 200)
+        jbutton2.setSize(200, 200)
+        jframe.pack()
+        jframe.show()
+        event = 0
+        while event != jframe do
+            event = event.next()
+            if event = jbutton1 then exit end if
+        end while
+        j.quit()
+    else Failed.show(LF)
+    end if
+end procedure
+--------------------------------------------------------------------------------
+procedure main()
+    Japi japi2
+    japi2 = Japi("\\dll\\32\\japi2.dll")
+    if japi2 then go(japi2)
+    else NotFound.show(LF)
+    end if
+end procedure
+--------------------------------------------------------------------------------
+--
+--=== Classes
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- Execution
+--------------------------------------------------------------------------------
+main()
+--------------------------------------------------------------------------------
+-- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.0.0
+--Euphoria Versions: 3.1.1 and later
+--Author: C A Newbould
+--Date: 2020.09.13
+--Status: operational; complete
+--Changes:]]]
+--  * created
+--------------------------------------------------------------------------------
+    
