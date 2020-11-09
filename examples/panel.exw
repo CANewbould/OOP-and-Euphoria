@@ -1,0 +1,167 @@
+--------------------------------------------------------------------------------
+--Example: panel.exw
+--------------------------------------------------------------------------------
+-- Notes:
+--
+--
+--------------------------------------------------------------------------------
+-- Version: 1.3.0
+-- Date: 2020.11.09
+-- Author: C A Newbould
+-- Status: operational; complete
+-- Changes:]]]
+--  * run event added
+--  * re-cast using extended class (Japi2)
+--
+------
+--*/
+--------------------------------------------------------------------------------
+--
+--==Interface
+--
+--------------------------------------------------------------------------------
+--
+--=== Includes
+--
+--------------------------------------------------------------------------------
+include japi.ew
+--------------------------------------------------------------------------------
+--
+--=== Constants
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+--=== Euphoria types
+--
+--------------------------------------------------------------------------------
+--
+--=== Variables
+--
+--------------------------------------------------------------------------------
+String Failed Failed = "*** JAPI2 couldn't start ***"
+String NotFound NotFound = "*** JAPI2 Library not found ***"
+--------------------------------------------------------------------------------
+--
+--=== New Class: Japi2
+--
+--------------------------------------------------------------------------------
+euclass Japi2(Japi self)
+    procedure go()
+        JMenuitem doit
+        integer dx
+        integer dy
+        JObject event
+        JMenu file
+        String ins
+        JFrame jframe
+        JLabel label
+        integer l_height
+        integer l_width
+        JMenubar menubar
+        JPanel panel
+        Integer p_height, q_height
+        Integer p_width, q_width
+        JMenuitem quit
+        boolean run
+        Integer x
+        Integer y
+        dx = 2
+        dy = 1
+        p_height = 256
+        p_width = 256
+        run = FALSE
+        if this.start() then
+            jframe = JFrame("Better Moving Label")
+            jframe.setLayout() -- border layout
+            menubar = JMenubar(jframe)
+            file = JMenu(menubar, "File")
+            doit = JMenuitem(file, "Start")
+            quit = JMenuitem(file, "Quit")
+            panel = JPanel(jframe)
+            label = JLabel(panel, "256:256")
+            label.setPos(120, 120)
+            jframe.show()
+            event = 0
+            while event != jframe do
+                if run then event = event.getNext()
+                else event = event.next()
+                end if
+                if event = quit then exit
+                elsif event = doit then
+                    if not run then run = TRUE doit.setText("Stop")
+                    else run = FALSE doit.setText("Start")
+                    end if
+                elsif event = panel then
+                    p_width = panel.getWidth()
+                    p_height = panel.getHeight()
+                    ins = p_width.toString("%d") &  ":" & p_height.toString("%d")
+                    label.setText(ins)
+                    l_width = label.getWidth()
+                    l_height = label.getHeight()
+                    x = (p_width-l_width) x = x.div(2)
+                    y = (p_height-l_height) y = y.div(2)
+                    label.setPos(x, y)
+                end if
+                if run then
+                    if ((x+l_width  > p_width) or (x < 1)) then  dx = -dx end if
+                    if ((y+l_height > p_height) or (y < 1)) then dy = -dy end if
+                    q_width = x+dx
+                    q_height = y+dy
+                    label.setPos(q_width, q_height)
+                    ins = q_width.toString("%d") &  ":" & q_height.toString("%d")
+                    label.setText(ins)
+                    this.sync()
+                    this.sleep(50) -- slowed s.t. user can see digits change
+                    x += dx
+                    y += dy
+                end if
+            end while
+            this.quit()
+        else Failed.show(LF)
+        end if
+    end procedure
+end euclass
+--------------------------------------------------------------------------------
+--  Execution
+--------------------------------------------------------------------------------
+procedure main()
+    Japi2 japi2
+    japi2 = Japi("\\dll\\32\\japi2.dll")
+    if japi2 then japi2.go()
+    else NotFound.show(LF)
+    end if
+end procedure
+--------------------------------------------------------------------------------
+--
+--=== Classes
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- Execution
+--------------------------------------------------------------------------------
+main()
+--------------------------------------------------------------------------------
+-- Previous versions
+--------------------------------------------------------------------------------
+-- Version: 1.2.0
+-- Date: 2020.10.30
+-- Author: C A Newbould
+-- Status: operational; complete
+-- Changes:]]]
+--  * panel event added
+--------------------------------------------------------------------------------
+-- Version: 1.1.0
+-- Date: 2020.09.15
+--Author: C A Newbould
+--Status: operational; complete
+--Changes:]]]
+--  * menu items added
+--------------------------------------------------------------------------------
+-- Version: 1.0.0
+-- Date: 2020.09.14
+--Author: C A Newbould
+--Status: operational; complete
+--Changes:]]]
+--  * created
+--------------------------------------------------------------------------------
