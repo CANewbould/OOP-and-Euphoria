@@ -8,13 +8,14 @@
 --/*
 --= OOEU Base Library for calling the Java Application Programming Interface
 ------
---[[[Version: 1.0.1
+--[[[Version: 1.1.0
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
---Date: 2020.08.25
+--Date: 2020.11.09
 --Status: operational; incomplete
 --Changes:]]]
---  * //japi// defined
+--  * ##sleep## defined
+--  * ##sync## defined
 ------
 --==OOEU Base JAPI Library
 --
@@ -27,7 +28,9 @@
 --* **Japi**(**Clib**)
 --** ##Japi##(s) : J
 --** ##quit##()
+--** ##sleep##(i)
 --** ##start##() : b
+--** ##sync##()
 --
 -- Utilise these features
 -- by adding the following statement to your module:
@@ -96,6 +99,16 @@ global euclass Japi(Clib self) -- JAPI Object
         jquit = Crid(this, "j_quit", {}, NULL)
         jquit.proc()
     end procedure
+    procedure sleep(integer msecs)
+        Crid jsleep
+        jsleep = Crid(this, "j_sleep", {C_INT}, NULL)
+        jsleep.proc({msecs})
+    end procedure
+    procedure sync()
+        Crid jsync
+        jsync = Crid(this, "j_sync", {}, NULL)
+        jsync.proc()
+    end procedure
     function Japi(sequence dll)
         japi = Clib(dll)
         if japi then return japi
@@ -119,6 +132,14 @@ end euclass
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.0.1
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.08.25
+--Status: operational; incomplete
+--Changes:]]]
+--  * //japi// defined
 --------------------------------------------------------------------------------
 --[[[Version: 1.0.0
 --OOEU Versions: 1.9.0 and later
