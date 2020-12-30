@@ -8,13 +8,15 @@
 --/*
 --= OOEU Main Library for the Java Application Programming Interface
 ------
---[[[Version: 1.6.0
+--[[[Version: 1.7.0
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
---Date: 2020.11.09
+--Date: 2020.12.30
 --Status: operational; incomplete
 --Changes:]]]
---  * ##getNext## defined
+--  * ##hide## defined
+--  * ##getXpos## defined
+--  * ##getYpos## defined
 ------
 --==OOEU Main JAPI Library
 --
@@ -34,6 +36,9 @@
 --** ##addTo##(JContainer)
 --** ##getHeight##()
 --** ##getWidth##()
+--** ##getXpos##()
+--** ##getYpos##()
+--** ##hide##()
 --** ##setBackColo[u]r##(i, i, i)
 --** ##setBorderPos##(i)
 --** ##setColor(i, i, i)
@@ -201,6 +206,15 @@ euclass JWidget(JObject self) -- the JAPI widget class
     function getWidth()
         return fC("j_getwidth", {C_INT}, {this}, C_INT)
     end function
+    function getXpos()
+        return fC("j_getxpos", {C_INT}, {this}, C_INT)
+    end function
+    function getYpos()
+        return fC("j_getypos", {C_INT}, {this}, C_INT)
+    end function
+    procedure hide()
+        pC("j_hide", {C_INT}, {this})
+    end procedure
     procedure setBackColor(integer r, integer g, integer b)
         pC("j_setcolorbg", {C_INT, C_INT, C_INT, C_INT}, {this, r, g, b})
     end procedure
@@ -454,6 +468,14 @@ end euclass
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.6.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.11.09
+--Status: operational; incomplete
+--Changes:]]]
+--  * ##getNext## defined
 --------------------------------------------------------------------------------
 --[[[Version: 1.5.0
 --OOEU Versions: 1.9.0 and later
