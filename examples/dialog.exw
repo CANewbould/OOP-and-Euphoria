@@ -1,0 +1,133 @@
+--------------------------------------------------------------------------------
+-- Example: dialog.exw
+--------------------------------------------------------------------------------
+-- Notes:
+--
+--
+--------------------------------------------------------------------------------
+-- Version: 1.0.0
+-- Date: 2020.12.30
+-- Author: C A Newbould
+-- Status: modified for present folder
+
+-- Author: C A Newbould
+-- Status: operational; complete
+-- Changes:]]]
+--  * run event added
+--  * re-cast using extended class (Japi2)
+--
+------
+--*/
+--------------------------------------------------------------------------------
+--
+--==Interface
+--
+--------------------------------------------------------------------------------
+--
+--=== Includes
+--
+--------------------------------------------------------------------------------
+include japi.ew
+--------------------------------------------------------------------------------
+--
+--=== Constants
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+--=== Euphoria types
+--
+--------------------------------------------------------------------------------
+--
+--=== Variables
+--
+--------------------------------------------------------------------------------
+String Failed Failed = "*** JAPI2 couldn't start ***"
+String NotFound NotFound = "*** JAPI2 Library not found ***"
+--------------------------------------------------------------------------------
+--
+--=== Routines
+--
+--------------------------------------------------------------------------------
+procedure go(Japi j)
+    ----------------
+    -- reserve slots for widgets/events
+    ----------------
+    JObject event
+    JDialog dialog
+    JMenu doit
+    JMenu file
+    JButton jclose
+    JFrame jframe
+    JLabel jlabel
+    JMenuitem jopen
+    JMenubar menubar
+    JMenuitem quit
+    atom x, y
+    integer xi, yi
+    if j.start() then
+        -- define widgets, arrange layout & initialise
+        ----------------
+        jframe  = JFrame("JDialog example")
+        menubar = JMenubar(jframe)
+        file    = JMenu(menubar, "File")
+        quit    = JMenuitem(file, "Quit")
+        doit    = JMenu(menubar, "Do It")
+        jopen   = JMenuitem(doit, "Open Dialog")
+        dialog  = JDialog(jframe, "Say Hello!")
+        jlabel  = JLabel(dialog, "Hello World")
+        jclose  = JButton(dialog, "Close")
+    	----------------
+        -- display the GUI
+        ----------------
+        dialog.setLayout(J_VERTICAL)
+        dialog.pack()
+        jframe.show()
+    	----------------
+        -- event handling
+        ----------------
+        event = 0
+        while ((event != jframe) and (event != quit)) do
+            event = event.next()
+            if (event = jopen) then
+                -- position dialog w.r.to frame
+                x = jframe.getXpos() + jframe.getWidth()/2 - dialog.getWidth()/2
+                y = jframe.getYpos() + jframe.getHeight()/2 - dialog.getHeight()/2
+                xi = floor(x)
+                yi = floor(y)
+                dialog.setPos(xi, yi)
+                dialog.show()
+            end if
+            if ((event = jclose) or (event = dialog)) then
+                dialog.hide()
+            end if
+        end while
+        ----------------
+        -- falls through - the end of the event loop - close
+        ----------------
+        j.quit()
+    end if
+end procedure
+--------------------------------------------------------------------------------
+--        main
+--------------------------------------------------------------------------------
+procedure main()
+    Japi japi2
+    japi2 = Japi("\\dll\\32\\japi2.dll")
+    if japi2 then go(japi2)
+    else NotFound.show(LF)
+    end if
+end procedure
+--------------------------------------------------------------------------------
+--
+--=== Classes
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- Execution
+--------------------------------------------------------------------------------
+main()
+--------------------------------------------------------------------------------
+-- Previous versions
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
