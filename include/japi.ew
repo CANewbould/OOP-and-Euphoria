@@ -8,15 +8,17 @@
 --/*
 --= OOEU Main Library for the Java Application Programming Interface
 ------
---[[[Version: 1.7.0
+--[[[Version: 1.8.0
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
---Date: 2020.12.30
+--Date: 2021.01.15
 --Status: operational; incomplete
 --Changes:]]]
---  * ##hide## defined
---  * ##getXpos## defined
---  * ##getYpos## defined
+--  * local class JChecks defined
+--  * ##setState##(JChecks) defined
+--  * local use of **boolean**
+--  * switched //ON// and //OFF// defined
+--  * ##getState## defined
 ------
 --==OOEU Main JAPI Library
 --
@@ -41,8 +43,7 @@
 --** ##hide##()
 --** ##setBackColo[u]r##(i, i, i)
 --** ##setBorderPos##(i)
---** ##setColor(i, i, i)
---** ##setColour(i, i, i)
+--** ##setColo[u]r(i, i, i)
 --** ##setPos##(i, i)
 --** ##setSize##(i, i)
 --** ##show##()
@@ -50,7 +51,10 @@
 --*** ##JButton##(JContainer, Str) : JButton
 --** **JCanvas**(**JWidget**)
 --*** ##JCanvas##(JContainer, i, i) : JCanvas
---** **JCheckbox**(**JWidget**)
+--** JChecks(**JWidget**)
+--*** ##getState##() : boolean
+--*** ##setState##(b)
+--** **JCheckbox**(**JChecks**)
 --*** ##JCheckbox##(JContainer, Str) : JCheckbox
 --** **JLabel**(**JWidget**)
 --*** ##JLabel##(JContainer, Str) : JLabel
@@ -114,7 +118,9 @@ global constant J_TOPLEFT = 5
 global constant J_TOPRIGHT = 6
 global constant J_BOTTOMLEFT = 7
 global constant J_BOTTOMRIGHT = 8
-    --------------------------------------------------------------------------------
+global constant OFF = 0
+global constant ON = not OFF
+--------------------------------------------------------------------------------
 --/*
 --====  Flow Layout: alignment
 --*/
@@ -134,6 +140,9 @@ global constant J_AREAUP = 4
 --=== Euphoria types
 --
 --------------------------------------------------------------------------------
+type boolean(integer self)
+    return TRUE
+end type
 --------------------------------------------------------------------------------
 --
 --=== Variables
@@ -282,7 +291,18 @@ end euclass
 --<eucode>##JCanvas##(JContainer parent, integer width, integer height) : JCanvas -- a new canvas with set dimensions</eucode>
 --*/
 --------------------------------------------------------------------------------
-global euclass JCheckbox(JWidget self)
+euclass JChecks(JWidget self)
+    function getState() : boolean
+        return fC("j_getstate", {C_INT}, {this}, C_BOOL)
+    end function
+    procedure setState(boolean state)
+        pC("j_setstate", {C_INT, C_BOOL}, {this, state})
+    end procedure
+end euclass
+--------------------------------------------------------------------------------
+-- Abstract class for Checkbox, Radiobutton [Checkmenuitem] [Led]
+--------------------------------------------------------------------------------
+global euclass JCheckbox(JChecks self)
     function JCheckbox(JObject parent, String label) : JCheckbox
         return fC("j_checkbox", {C_INT, C_POINTER}, {parent, label.toC()}, C_INT)
     end function
@@ -468,6 +488,16 @@ end euclass
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.7.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.12.30
+--Status: operational; incomplete
+--Changes:]]]
+--  * ##hide## defined
+--  * ##getXpos## defined
+--  * ##getYpos## defined
 --------------------------------------------------------------------------------
 --[[[Version: 1.6.0
 --OOEU Versions: 1.9.0 and later
