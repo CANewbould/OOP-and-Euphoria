@@ -8,13 +8,15 @@
 --/*
 --= OOEU Library for the Sequence Class and all derived classes
 ------
---[[[Version: 1.4.0
+--[[[Version: 1.5.0
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
---Date: 2020.08.25
+--Date: 2021.01.19
 --Status: operational; incomplete
 --Changes:]]]
---* ##toC## (**String**) defined
+--* ##startsWith##(**String**) defined
+--* //HEAD//, //TAIL//, //BOTH// defined
+--* ##trim## defined
 --
 ------
 --==OOEU Module Library: sequence.e
@@ -23,6 +25,10 @@
 -- module.
 --
 --===Constants
+--* //BOTH// -in ##trim##
+--* //HEAD// -in ##trim##
+--* //LF// - line-feed in ##show##
+--* //TAIL// -in ##trim##
 --===Types
 --* **complex**(**vector**)
 --* **string**(**sequence**)
@@ -39,8 +45,9 @@
 --** ##reverse() : s
 --* **String**(**Sequence**)
 --** ##String##(str) : Str
---** ##show()
---** ##show(b)
+--** ##show##([b])
+--** ##startsWith##(str) : b
+--** ##trim##(i) : str
 --** ##toC##() : a
 --* **Vector**(**Sequence**)
 --** ##Vector##() : V
@@ -71,7 +78,9 @@ include atom.e -- for types
 --*/
 --------------------------------------------------------------------------------
 constant M_ALLOC = 16
+global constant HEAD = 1, TAIL = 2, BOTH = 3 -- pointers for trim
 global constant LF = TRUE -- trigger for line-feed
+constant WHITESPACE = " \t\r"
 --------------------------------------------------------------------------------
 --/*
 --=== Euphoria types
@@ -175,6 +184,15 @@ end euclass
 --<eucode>function reverse() : sequence -- the source reversed: {this[$]..this[1]}
 --*/
 --------------------------------------------------------------------------------
+function trim(string self) : string
+    integer index
+    index = 1
+    while find(self[index], WHITESPACE) do
+        index += 1
+    end while
+    return self[index..$]
+end function
+--------------------------------------------------------------------------------
 global euclass String(Sequence self) -- all character-based Objects
     procedure show()
         puts(1, this)
@@ -195,6 +213,22 @@ global euclass String(Sequence self) -- all character-based Objects
         end if
         return mem
     end function
+    function trim(integer where) : string
+        String tr
+        if where = HEAD then
+            return trim(this)
+        elsif where = TAIL then
+            tr = this.reverse()
+            tr = trim(tr)
+            return tr.reverse()
+        else
+            tr = this.trim(HEAD)
+            return tr.trim(TAIL)
+        end if
+    end function
+    function startsWith(string start) : boolean
+        return match(start, this.trim(HEAD)) = 1
+    end function
     function String(string str) : string
         return str
     end function
@@ -207,6 +241,8 @@ end euclass
 --<eucode>String(string s) : String -- assigns type-checked property value</eucode>
 --====Methods
 --<eucode>procedure show([boolean lf]) -- displays the source</eucode>
+--<eucode>function startsWith(string start) : boolean -- after trimming there is a match</eucode>
+--<eucode>function trim(integer where) : string -- this after trimming whitespace at HEAD, TAIL or [BOTH]</eucode>
 --*/
 --------------------------------------------------------------------------------
 global euclass Vector(Sequence self) -- all-atom array Objects
@@ -236,6 +272,14 @@ end euclass
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.4.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.08.25
+--Status: operational; incomplete
+--Changes:]]]
+--* ##toC## (**String**) defined
 --------------------------------------------------------------------------------
 --[[[Version: 1.3.0
 --OOEU Versions: 1.9.0 and later
