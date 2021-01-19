@@ -8,13 +8,14 @@
 --/*
 --= Example using OOEU library sequence.e
 ------
---[[[Version: 1.4.0
+--[[[Version: 1.5.0
 --Euphoria Versions: 3.1.1 and later
 --Author: C A Newbould
---Date: 2020.08.22
+--Date: 2021.01.19
 --Status: operational; incomplete
 --Changes:]]]
---* modified test of ##sum##
+--* added multiple tests of ##trim##
+--* added test for ##startsWith##
 --
 ------
 --== Module holding examples of Sequence Objects
@@ -48,6 +49,7 @@ String Filter Filter = "Even numbers between 10 and 20: "
 String Low Low = "Transform to Lower-Case: "
 String Rev Rev = "Evens in descending order: "
 String Seq Seq = "The sequence is: "
+String Untrimmed Untrimmed = "   I am currently untrimmed!    "
 String Upp Upp = "Transform to Upper-Case: "
 String Vec Vec = "The run from -5 to +5 in absolute terms is: " --v1.3.0
 --------------------------------------------------------------------------------
@@ -98,6 +100,10 @@ euclass App(atom self)
         l = s.length() l.show("The length is: %d\n")
         Upp.show() transformed = s.map(UP) transformed.show(LF)
         Low.show() transformed = s.map(DOWN) transformed.show(LF)
+        s = "Untrimmed: !" s.show() Untrimmed.show() s = "!" s.show(LF)
+        s = "Trimmed head: !" s.show() transformed = Untrimmed.trim(HEAD) transformed.show() s = "!" s.show(LF)
+        s = "Trimmed tail: !" s.show() transformed = Untrimmed.trim(TAIL) transformed.show() s = "!" s.show(LF)
+        s = "Does Untrimmed start with 'I am'?" s.show() s = iif(Untrimmed.startsWith("I am"), " YES", " NO") s.show(LF)
         list = Vector(1, 10) l = list.sum() l.show("The sum of [1..10] is %d\n") --v1.4.0
         Filter.show() list = 2*list list = list.filter(EVEN) list.show()
         list = list.reverse() Rev.show() list.show()
@@ -112,6 +118,14 @@ seqeg.main("Testing Sequence library") -- execute 'main'
 --*** v1.2.0 ends
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.4.0
+--Euphoria Versions: 3.1.1 and later
+--Author: C A Newbould
+--Date: 2020.08.22
+--Status: operational; incomplete
+--Changes:]]]
+--* modified test of ##sum##
 --------------------------------------------------------------------------------
 --[[[Version: 1.3.0
 --Euphoria Versions: 3.1.1 and later
