@@ -8,13 +8,13 @@
 --/*
 --= OOEU Library for the Object Class
 ------
---[[[Version: 1.2.0
+--[[[Version: 1.3.0
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
---Date: 2020.08.05
+--Date: 2021.01.19
 --Status: operational; incomplete
 --Changes:]]]
---* ##show## extended
+--* ##equals## (**Object**) defined
 --
 ------
 --==OOEU core library: object.e
@@ -24,6 +24,7 @@
 --
 --===Classes (methods)
 --* **Object**
+--** ##equals##(o) : b
 --** ##show##([s])
 --
 -- Utilise these features
@@ -68,6 +69,9 @@ include core.e -- for basic utilities & type definitions
 --*/
 --------------------------------------------------------------------------------
 global euclass Object(object self) -- the base (anonymous) class
+    function equals(object other) : boolean
+        return equal(this, other)
+    end function
     procedure show()
         ?this
     end procedure
@@ -80,6 +84,7 @@ end euclass
 --====Property
 --<eucode>object this</eucode>
 --====Methods
+--<eucode>function equals(object other) : boolean -- TRUE if the same
 --<eucode>show([sequence format]) -- displays the Object's property value
 -- either prettily or via a format specifier </eucode>
 --*/
@@ -89,6 +94,14 @@ end euclass
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.2.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.08.05
+--Status: operational; incomplete
+--Changes:]]]
+--* ##show## extended
 --------------------------------------------------------------------------------
 --[[[Version: 1.1.0
 --OOEU Versions: 1.9.0 and later
