@@ -8,17 +8,18 @@
 --/*
 --= OOEU Main Library for the Java Application Programming Interface
 ------
---[[[Version: 1.8.0
+--[[[Version: 1.9.0
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
---Date: 2021.01.15
+--Date: 2021.01.17
 --Status: operational; incomplete
 --Changes:]]]
---  * local class JChecks defined
---  * ##setState##(JChecks) defined
---  * local use of **boolean**
---  * switched //ON// and //OFF// defined
---  * ##getState## defined
+--  * ##fileDialog## defined
+--  * local Ptr2Str(**atom**) defined
+--  * local toString[Ptr2Str] defined
+--  * **JText** defined
+--  * ##JFrame##() defined
+--  * **JAlertbox** defined
 ------
 --==OOEU Main JAPI Library
 --
@@ -58,6 +59,7 @@
 --*** ##JCheckbox##(JContainer, Str) : JCheckbox
 --** **JLabel**(**JWidget**)
 --*** ##JLabel##(JContainer, Str) : JLabel
+--** **JText**(**JWidget**)
 --* **JContainer**(**JWidget**)
 --** ##pack##()
 --** ##setHgap(i)
@@ -68,11 +70,15 @@
 --** **JDialog**(**JContainer**)
 --*** ##JDialog##(JContainer, Str) : JDialog
 --** **JFrame**(**JContainer**)
+--*** ##JFrame##() : JFrame
 --*** ##JFrame##(Str) : JFrame
+--*** ##fileDialog##(Str, Str) : Str
 --** **JPanel**(**JContainer**)
 --*** ##JPanel##(JContainer) : JPanel
 --** **JWindow**(**JContainer**)
 --*** ##JWindow##(JContainer) : JWindow
+--** **JAlertbox**(**JObject**)
+--*** ##JAlertbox##(JFrame, Str, Str, Str) : JAlertbox
 --** **JMessagebox**(**JObject**)
 --*** ##JMessagebox##(JFrame, Str, Str) : JMessagebox
 --** **JMenubar**(**integer**)
@@ -168,6 +174,24 @@ end procedure
 --/*
 --=== Classes
 --*/
+--------------------------------------------------------------------------------
+-- local
+--------------------------------------------------------------------------------
+euclass Ptr2Str(atom self) -- a pointer to a NULL-terminated string held in memory
+    function toString() : string
+        integer offset
+        string thestring
+        offset = 0
+        thestring = ""
+        while peek(this + offset) != 0 do
+            thestring = append(thestring, peek(this + offset))
+            offset += 1
+        end while
+        return thestring
+    end function
+end euclass
+--------------------------------------------------------------------------------
+-- global
 --------------------------------------------------------------------------------
 global euclass JObject(Crid self) -- the base JAPI Object class
     procedure disable()
@@ -328,6 +352,23 @@ end euclass
 --<eucode>##JLabel##(JContainer parent, String label) : JLabel -- a new label widget</eucode>
 --*/
 --------------------------------------------------------------------------------
+global euclass JText(JWidget self) -- an editable text block, either line or multiline
+    function JText(JObject parent, integer width) : JText
+        return fC("j_textfield", {C_INT, C_INT}, {parent, width}, C_INT)        
+    end function
+    function JText(JObject parent, integer rows, integer width) : JText
+        return fC("j_textarea", {C_INT, C_INT, C_INT}, {parent, rows, width}, C_INT)        
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>handle this</eucode>
+--====Constructors
+--<eucode>##JText##(JContainer parent, integer width) : JText -- a new single-line edit widget</eucode>
+--<eucode>##JText##(JContainer parent, integer rows, String label) : JText -- a new multi-line edit widget</eucode>
+--*/
+--------------------------------------------------------------------------------
 euclass JContainer(JWidget self) -- the JAPI container class
     procedure pack()
         pC("j_pack", {C_INT}, {this})
@@ -388,8 +429,17 @@ end euclass
 --*/
 --------------------------------------------------------------------------------
 global euclass JFrame(JContainer self) -- JAPI top-level window class
+    function fileDialog(String title, String directory) : string
+        Ptr2Str ptr
+        ptr = fC("j_filedialog", {C_INT, C_POINTER, C_POINTER, C_POINTER},
+                    {this, title.toC(), directory.toC(), NULL}, C_POINTER)
+        return ptr.toString()
+    end function
     function JFrame(String text) : JFrame -- the fundamental 'window' container
         return fC("j_frame", {C_POINTER}, {text.toC()}, C_INT)
+    end function
+    function JFrame() : JFrame -- the fundamental 'window' container
+        return JFrame("")
     end function
 end euclass
 --------------------------------------------------------------------------------
@@ -397,7 +447,9 @@ end euclass
 --====Property
 --<eucode>handle this</eucode>
 --====Constructors
---<eucode>function JFrame(String text) : JFrame -- the fundamental 'window' container</eucode>
+--<eucode>function JFrame([String text]) : JFrame -- the fundamental 'window' container</eucode>
+--====Methods
+--<eucode>function fileDialog(String title, String directory) : String -- the file name chosen</eucode>
 --*/
 --------------------------------------------------------------------------------
 global euclass JPanel(JContainer self) -- JAPI panel class
@@ -424,6 +476,18 @@ end euclass
 --<eucode>handle this</eucode>
 --====Constructors
 --<eucode>function JWindow(JContainer parent) : JWindow -- a window container</eucode>
+--*/
+--------------------------------------------------------------------------------
+global euclass JAlertbox(JObject self) -- JAPI alert-box class
+    function JAlertbox(JFrame parent, String title, String text, String button) : JAlertbox
+        return fC("j_alertbox", {C_INT, C_POINTER, C_POINTER, C_POINTER},
+                    {parent, title.toC(), text.toC(), button.toC()}, C_INT)
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Constructors
+--<eucode>function JAlertbox(JFrame parent, String title, String text, String button) : JAlertbox</eucode>
 --*/
 --------------------------------------------------------------------------------
 global euclass JMessagebox(JObject self) -- JAPI message-box class
@@ -488,6 +552,18 @@ end euclass
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.8.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2021.01.15
+--Status: operational; incomplete
+--Changes:]]]
+--  * local class JChecks defined
+--  * ##setState##(JChecks) defined
+--  * local use of **boolean**
+--  * switched //ON// and //OFF// defined
+--  * ##getState## defined
 --------------------------------------------------------------------------------
 --[[[Version: 1.7.0
 --OOEU Versions: 1.9.0 and later
