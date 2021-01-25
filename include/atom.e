@@ -8,13 +8,13 @@
 --/*
 --= OOEU Library for the Atom Class and all derived classes
 ------
---[[[Version: 1.5.0
+--[[[Version: 1.5.1
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
---Date: 2020.10.30
+--Date: 2021.01.17
 --Status: operational; incomplete
 --Changes:]]]
---* ##toString## defined
+--* minor edits
 --
 ------
 --==OOEU Module Library: atom.e
@@ -52,13 +52,13 @@
 --** ##mod##(i) : i
 --* **Rid**(**Integer**)
 --** ##routine_id##(s) : r
---** ##func([s]) : o
+--** ##func##([s]) : o
 --** ##proc##([s])
 --* **Clib**(**Atom**)
 --** ##Clib##(s) : Clib
 --* **Crid**(**Integer**)
 --** ##Crid##(Clib,s,s,a) : Crid
---** ##func([s]) : a
+--** ##func##([s]) : a
 --** ##proc##([s])
 --
 -- Utilise these features
@@ -89,7 +89,7 @@ global constant C_POINTER = #02000004
 constant CHARS = run(9, 13) & run(32, 126)
 constant LOWER = run('a', 'z')
 constant M_DEFINE_C_FUNC = 51
-constant M_OPEN_C_LIB = 50
+constant M_OPEN_DLL = 50
 global constant NULL = 0
 constant UNSET = -1
 constant UPPER = run('A', 'Z')
@@ -248,7 +248,7 @@ end euclass
 --------------------------------------------------------------------------------
 global euclass Clib(Atom self) -- C-library Objects
     function Clib(sequence s) : Clib
-        return machine_func(M_OPEN_C_LIB, s)
+        return machine_func(M_OPEN_DLL, s)
     end function
 end euclass
 --------------------------------------------------------------------------------
@@ -294,6 +294,14 @@ end euclass
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.5.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2020.10.30
+--Status: operational; incomplete
+--Changes:]]]
+--* ##toString## defined
 --------------------------------------------------------------------------------
 --[[[Version: 1.4.1
 --OOEU Versions: 1.9.0 and later
