@@ -38,7 +38,8 @@ Some examples deliberately add further examples of OOP practice as further aids 
 
 Clearly there is no limit to the extensibility of this development and users are encouraged to develop their own specialist modules to augment the core provided here.
 
-For completeness, the repository contains two extension libraries for creating interfaces. These sit "on top" of the basic material and are:
+For completeness, the repository contains three extension libraries for creating interfaces. These sit "on top" of the basic material and are:
 
-* *io.e*: a library providing basic Input/Output facilities
-* *japi.ew*: a library that provides a Graphical User Interface (GUI). This accesses the Java Swing toolkit.
+* *file.e*: a library providing basic Input/Output facilities for files. It parallels the Python file objects library to quite an extent
+* *os.e*: a library providing Operating System-level file management. It parallels the Python os library to some extent
+* *japi.ew*: a library that provides a Graphical User Interface (GUI). This accesses the Java Swing toolkit. (There is also a very small support library //japi.e//, which handles library access and provides some useful system-level resources outside the Swing library.)
