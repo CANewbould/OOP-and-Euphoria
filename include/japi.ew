@@ -8,18 +8,15 @@
 --/*
 --= OOEU Main Library for the Java Application Programming Interface
 ------
---[[[Version: 1.9.0
+--[[[Version: 1.10.0
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
---Date: 2021.01.17
+--Date: 2021.01.26
 --Status: operational; incomplete
 --Changes:]]]
---  * ##fileDialog## defined
---  * local Ptr2Str(**atom**) defined
---  * local toString[Ptr2Str] defined
---  * **JText** defined
---  * ##JFrame##() defined
---  * **JAlertbox** defined
+--  * **JChoices** defined
+--  * ##addItem## (**JChoices**) defined
+--  * ##add## (**JContainer**) defined
 ------
 --==OOEU Main JAPI Library
 --
@@ -61,6 +58,7 @@
 --*** ##JLabel##(JContainer, Str) : JLabel
 --** **JText**(**JWidget**)
 --* **JContainer**(**JWidget**)
+--** ##add##(**JWidget**)
 --** ##pack##()
 --** ##setHgap(i)
 --** ##setLayout##([i][,i])
@@ -88,6 +86,8 @@
 --*** ##JSeparator##()
 --** **JMenuitem##(**JObject**)
 --*** ##JMenuitem(JMenu, Str) : JMenuitem
+--* **JChoices**(**JWidget**)
+--** ##addItem##(String)
 --
 -- Utilise these features
 -- by adding the following statement to your module:
@@ -370,6 +370,8 @@ end euclass
 --*/
 --------------------------------------------------------------------------------
 euclass JContainer(JWidget self) -- the JAPI container class
+    procedure add(JWidget control)
+        pC("j_add", {C_INT, C_INT}, {control, this})
     procedure pack()
         pC("j_pack", {C_INT}, {this})
     end procedure
@@ -394,6 +396,7 @@ end euclass
 --====Property
 --<eucode>handle this</eucode>
 --====Methods
+--<eucode>##add##(JWidget control) -- adds a previously-defined widget to this container</eucode>
 --<eucode>##pack##() -- resizes component to the minimal size of contained widgets</eucode>
 --<eucode>##setHgap##(integer gap) -- defines the horizontal gap between contained widgets</eucode>
 --<eucode>##setLayout() -- adds a border layout manager to the container</eucode>
@@ -546,12 +549,38 @@ end euclass
 --<eucode>function JMenuitem(JMenu parent, String label) : JMenuitem</eucode>
 --*/
 --------------------------------------------------------------------------------
+euclass JChoices(JWidget self) -- the base choice class (JList, JChoice)
+    procedure addItem(String str)
+        pC("j_additem", {C_INT, C_POINTER}, {this, str.toC()})
+    end procedure
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>handle this</eucode>
+--====Methods
+--<eucode>procedure addItem(String str) -- adds a new text item</eucode>
+--*/
+--------------------------------------------------------------------------------
 --
 --==== Defined instances
 --
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.9.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2021.01.17
+--Status: operational; incomplete
+--Changes:]]]
+--  * ##fileDialog## defined
+--  * local Ptr2Str(**atom**) defined
+--  * local toString[Ptr2Str] defined
+--  * **JText** defined
+--  * ##JFrame##() defined
+--  * **JAlertbox** defined
 --------------------------------------------------------------------------------
 --[[[Version: 1.8.0
 --OOEU Versions: 1.9.0 and later
