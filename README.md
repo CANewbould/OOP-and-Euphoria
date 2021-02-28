@@ -38,9 +38,9 @@ The module libraries offered in this repository, probably as a consequence, repr
 
 ### Object-based libraries
 
-The module *object.e* contains the definitions of **euclass**es which parallel Euphoria's core types. Definitions of **Atom** and **Sequence** classes mirror **atom**, **sequence** types, even if **Object** doesn't quite parallel the **object** type. Methods are added which apply to Objects of these classes and, broadly speaking, provide similar functionality to that offered in Open Euphoria's "standard" libraries. Each of these holds, as the property, an **atom** or **sequence** value.
+The module *object.e* contains the definitions of **euclass**es which parallel Euphoria's core types. Definitions of **Atom** and **Sequence** classes mirror **atom** and **sequence** types, even if **Object** doesn't quite parallel the **object** type. Methods are added which apply to Objects of these classes and, broadly speaking, provide similar functionality to that offered in Open Euphoria's "standard" libraries. Each of these holds, as the property, an **atom** or **sequence** value.
 
-Within this library module further sub-classes are defined. For example, the **Integer** class extends the **Atom**; whilst **Sequence** extends into **String** and **Vector**.
+Within each library module further sub-classes are defined. For example, the **Integer** class extends the **Atom**; whilst **Sequence** extends into **String** and **Vector**.
 
 Underpinning *object.e* is a module *core.e* which provides some basic utilities and type definitions. These are essentially Euphoria rather than OOEU, but have been constructed using OOEU's facility to show the type of each return value.
 
@@ -66,9 +66,11 @@ Some examples deliberately add further examples of OOP practice as further aids 
 
 Clearly there is no limit to the extensibility of this development and users are encouraged to develop their own specialist modules to augment the cores provided here.
 
-For completeness, the repository contains an extension library for creating graphical interfaces. This sits "on top" of the basic material.
+For completeness, the repository contains two extension library for creating graphical interfaces. These sits "on top" of the basic material.
 
-* *japi.ew*: a library that provides a Graphical User Interface (GUI). This accesses the Java Swing toolkit. (There is also a very small support library //japi.e//, which handles library access and provides some useful system-level resources outside the Swing library.) At present this only works for MS Windows.
+* *japi.ew*: this accesses the Java Swing toolkit. (There is also a very small support library //japi.e//, which handles library access and provides some useful system-level resources outside the Swing library.) At present this only works for MS Windows and may not work on the very latest versions of the Java Runtime Environment.
+
+* *iup.ew*: the accesses the IUP GUI libraries. Although IUP is not essentially OOP-based, this implementation structures IUP in an OOP-friendly fashion.
 
 ## State of development
 
