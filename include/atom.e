@@ -8,13 +8,18 @@
 --/*
 --= OOEU Library for the Atom Class and all derived classes
 ------
---[[[Version: 1.5.1
+--[[[Version: 1.6.0
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
---Date: 2021.01.17
+--Date: 2021.02.28
 --Status: operational; incomplete
 --Changes:]]]
---* minor edits
+--* **memory** defined
+--* **Memory** defined
+--* ##Memory## defined
+--* ##free## defined
+--* ##toStr## defined
+--* ##callBack## defined
 --
 ------
 --==OOEU Module Library: atom.e
@@ -31,6 +36,7 @@
 --* **character**(i)
 --* **clib**(a)
 --* **crid**(i)
+--* **memory**(a)
 --* **rid**(i)
 --===Routines
 --===Classes (methods)
@@ -47,11 +53,12 @@
 --** ##lower##() : c
 --** ##upper##() : c
 --* **Integer** (**Atom**)
---** ##Integer(i) : I
+--** ##Integer##(i) : I
 --** ##div##(i) : i
 --** ##mod##(i) : i
 --* **Rid**(**Integer**)
 --** ##routine_id##(s) : r
+--** ##callBack##() : r
 --** ##func##([s]) : o
 --** ##proc##([s])
 --* **Clib**(**Atom**)
@@ -60,6 +67,10 @@
 --** ##Crid##(Clib,s,s,a) : Crid
 --** ##func##([s]) : a
 --** ##proc##([s])
+--* **Memory**(**atom**)
+--** ##Memory##(i) : Memory
+--** ##free##()
+--** ##toStr() : str
 --
 -- Utilise these features
 -- by adding the following statement to your module:
@@ -88,7 +99,10 @@ global constant C_INT = #01000004
 global constant C_POINTER = #02000004
 constant CHARS = run(9, 13) & run(32, 126)
 constant LOWER = run('a', 'z')
+constant M_ALLOC = 16
+constant M_CALL_BACK = 52
 constant M_DEFINE_C_FUNC = 51
+constant M_FREE = 17
 constant M_OPEN_DLL = 50
 global constant NULL = 0
 constant UNSET = -1
@@ -108,6 +122,10 @@ end type
 --------------------------------------------------------------------------------
 global type crid(integer c) -- C-library routine_id value
     return c >= UNSET
+end type
+--------------------------------------------------------------------------------
+global type memory(atom a) -- pointer to start of memory block
+    return a >= 0
 end type
 --------------------------------------------------------------------------------
 global type rid(integer r) -- routine_id value
@@ -225,6 +243,9 @@ global euclass Rid(Integer self) -- routine_id Objects
     function func() : object
         return call_func(this, {})
     end function
+    function callBack() : Rid
+        return machine_func(M_CALL_BACK, {'+', this})
+    end function
     function func(sequence a) : object
         return call_func(this, a)
     end function
@@ -242,6 +263,7 @@ end euclass
 --====Constructors
 --<eucode>routine_id(sequence s) : Rid -- assigns type-checked property value</eucode>
 --====Methods
+--<eucode>function callBack() : Rid --machine address of the function</eucode>
 --<eucode>function func([sequence a]) : object -- executes the function</eucode>
 --<eucode>procedure proc([sequence a]) -- executes the procedure</eucode>
 --*/
@@ -293,7 +315,48 @@ end euclass
 --
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
+global euclass Memory(memory self) -- the memory class
+    function Memory(integer size) : Memory
+        return machine_func(M_ALLOC, size)
+    end function
+    procedure free()
+        machine_proc(M_FREE, this)
+    end procedure
+    function toStr() : sequence
+        integer c
+        atom ptr
+        sequence ret
+        ptr = this
+        ret = ""
+        c = peek(ptr)
+        while c != 0 do
+            ret &= c
+            ptr += 1
+            c = peek(ptr)
+        end while
+        return ret
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>memory this</eucode>
+--====Constructor
+--<eucode>function Memory(integer size) : Memory</eucode>
+--====Methods
+--<eucode>procedure free()</eucode>
+--<eucode>function toStr() : sequence (string)</eucode>
+--*/
+--------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.5.1
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2021.01.17
+--Status: operational; incomplete
+--Changes:]]]
+--* minor edits
 --------------------------------------------------------------------------------
 --[[[Version: 1.5.0
 --OOEU Versions: 1.9.0 and later
