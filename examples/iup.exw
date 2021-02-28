@@ -1,0 +1,135 @@
+--------------------------------------------------------------------------------
+-- Example: iup.exw
+--------------------------------------------------------------------------------
+-- Notes:
+--
+--
+--------------------------------------------------------------------------------
+--/*
+--= Example using OOEU library iup.ew
+------
+--[[[Version: 1.0.1
+--Euphoria Versions: 3.1.1 and later
+--Author: C A Newbould
+--Date: 2021.02.28
+--Status: operational; incomplete
+--Changes:]]]
+--* created
+--* test for ##Label##
+--* test for ##Vbox##
+--* test for ##getFile##
+--* test for ##callback##
+--
+------
+--== Module holding examples of IUP Objects
+--
+------
+--*/
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+--=== Includes
+--
+--------------------------------------------------------------------------------
+include ..\include\iup.ew
+--------------------------------------------------------------------------------
+--
+--=== Constants
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+--=== Types
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+--=== Variables
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+--=== Routines
+--
+--------------------------------------------------------------------------------
+function quit_onClick()
+    return IUP_CLOSE
+end function
+--------------------------------------------------------------------------------
+function getf_onClick()
+    sequence gf
+    gf = IUP.getFile("*.e*")
+    IUP.MessageBox("GetFile Choice", gf[2])
+    return IUP_CONTINUE
+end function
+--------------------------------------------------------------------------------
+--
+--=== Classes
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+--=== Main routine
+--
+--------------------------------------------------------------------------------
+procedure main(String title)
+    Hbox box
+    Dialog dlg
+    Button getf
+    Label lab
+    Button ok
+    Button quit
+    Vbox vbox
+    Atom ver
+    IUP.open()
+        ver = IUP.version()
+        IUP.MessageBox("Version", sprintf("Version %.2f", ver))
+        -- dialog example
+        ok = Button("OK")
+        ok.attribute("TIP", "I don't do anything!")
+        quit = Button("Quit")
+        quit.attribute("TIP", "Click me to exit the app")
+        quit.callback("ACTION", routine_id("quit_onClick"))
+        getf = Button("Open file")
+        getf.attribute("TIP", "Opens file dialog")
+        getf.callback("ACTION", routine_id("getf_onClick"))
+        lab = Label("I am a label!")
+        box = Hbox({ok, quit, getf})
+        box.attribute("GAP", "20")
+        vbox = Vbox({box, lab})
+        vbox.attribute("GAP", "10")
+        -- dialog defined
+        dlg = Dialog(vbox)
+        dlg.attribute("SIZE", "THIRDxTHIRD")
+        dlg.attribute("TITLE", title)
+        -- dialog show
+        dlg.show(100, 80)
+    -- event loop
+    IUP.MainLoop()
+    IUP.close()
+end procedure
+--------------------------------------------------------------------------------
+-- Execution
+--------------------------------------------------------------------------------
+main("Testing OOEU's approach to IUP")
+--------------------------------------------------------------------------------
+-- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.0.0
+--Euphoria Versions: 3.1.1 and later
+--Author: C A Newbould
+--Date: 2021.02.27
+--Status: operational; incomplete
+--Changes:]]]
+--* created
+--* test for **Iup**
+--* test for ##open##
+--* test for ##close##
+--* test for ##version##
+--* test for ##MessageBox##
+--* modified after //IUP// defined
+--* test for ##Dialog##
+--* test for ##MainLoop##
+--* test for ##Button##
+--* test for ##Hbox##
+--------------------------------------------------------------------------------
