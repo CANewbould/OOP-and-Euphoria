@@ -8,24 +8,23 @@
 --/*
 --= OOEU Library for the IUP GUI Library
 ------
---[[[Version: 1.0.1
+--[[[Version: 1.0.2
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
 --Date: 2021.02.28
 --Status: operational; incomplete
 --Changes:]]]
---* ##Label## defined
---* **Iup** made local
---* **Vbox** defined
---* ##Vbox## defined
---* ##hide## defined
---* ##destroy## defined
---* **Frame** defined
---* ##Frame## defined
---* ##getFile## defined
---* ##callback## defined
---* //IUP_CLOSE// defined
---* //IUP_CONTINUE// defined
+--* ##attributes## defined
+--* **Fill** defined
+--* ##Fill## defined
+--* **Space** defined
+--* ##Space## defined
+--* **Sbox** defined
+--* ##Sbox## defined
+--* **Toggle** defined
+--* ##Toggle## defined
+--* **Radio** defined
+--* ##Radio## defined
 --
 ------
 --==OOEU Module Library: iup.ew
@@ -50,19 +49,30 @@
 --** ##version##() : a
 --* **Widget** (**Ihandle**)
 --** ##attribute##(str,str) : void
+--** ##attributes##(str) : Widget
 --** ##callback##(str,rid) : rid
 --** ##destroy##() : void
 --** ##getAttribute##(str) : str
 --** ##Label##(str) : Widget
 --* **Button** (**Widget**)
 --** ##Button##(str) : Button
+--* **Fill** (**Widget**)
+--** ##Fill##() : Fill
 --* **Label** (**Widget**)
 --** ##Label##(str) : Label
+--* **Space** (**Widget**)
+--** ##Space##() : Fill
 --* **Container** (**Widget**)
+--* **Frame** (**Container**)
+--** ##Frame##(Widget) : Frame
 --* **Hbox** (**Container**)
---* ##Hbox##(s) : Hbox
+--** ##Hbox##(s) : Hbox
+--* **Radio** (**Container**)
+--** ##Radio##(Widget) : Radio
+--* **Sbox** (**Container**)
+--** ##Sbox##(Widget) : Sbox
 --* **Vbox** (**Container**)
---* ##Vbox##(s) : Vbox
+--** ##Vbox##(s) : Vbox
 --* **Dialog**(**Widget**)
 --** ##Dialog##([Widget]) : Dialog
 --** ##hide##() : i
@@ -214,6 +224,11 @@ euclass Widget(Ihandle self) -- the core control class
         sa = Crid(IUP, "+IupSetAttribute", {C_HANDLE, C_STRING, C_STRING}, VOID)
         sa.proc({this, name.toC(), val.toC()})
     end procedure
+    function attributes(String attribs) : Widget
+        Crid sas
+        sas = Crid(IUP, "+IupSetAttributes", {C_HANDLE, C_STRING}, C_HANDLE)
+        return sas.func({this, attribs.toC()})
+    end function
     function callback(String name, Rid fn) : rid
         Crid cb
         cb = Crid(IUP, "+IupSetCallback", {C_HANDLE, C_STRING, C_POINTER}, C_POINTER)
@@ -237,6 +252,7 @@ end euclass
 --<eucode>Ihandle this</eucode>
 --====Methods
 --<eucode>procedure attribute(String name, String val)</eucode>
+--<eucode>function attributes(String attribs) : Widget</eucode>
 --<eucode>function callback(String name, Rid fn) : rid</eucode>
 --<eucode>procedure destroy()</eucode>
 --<eucode>function getAttribute(String name) : string</eucode>
@@ -261,6 +277,23 @@ end euclass
 --*/
 --------------------------------------------------------------------------------
 --/*
+--=== Class: Fill
+--*/
+--------------------------------------------------------------------------------
+global euclass Fill(Widget self) -- the IUP Fill class
+    function Fill() : Fill
+        Crid f f = Crid(IUP, "+IupFill", {}, C_HANDLE)
+        return f.func({})
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>Ihandle this</eucode>
+--====Constructor
+--<eucode>function Fill() : Fill</eucode>
+--------------------------------------------------------------------------------
+--/*
 --=== Class: Label
 --*/
 --------------------------------------------------------------------------------
@@ -276,6 +309,41 @@ end euclass
 --<eucode>Ihandle this</eucode>
 --====Constructor
 --<eucode>function Label(String title) : Label</eucode>
+--*/
+--------------------------------------------------------------------------------
+--/*
+--=== Class: Space
+--*/
+--------------------------------------------------------------------------------
+global euclass Space(Widget self) -- the IUP Space class
+    function Space() : Space
+        Crid f f = Crid(IUP, "+IupSpace", {}, C_HANDLE)
+        return f.func({})
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>Ihandle this</eucode>
+--====Constructor
+--<eucode>function Space() : Space</eucode>
+--------------------------------------------------------------------------------
+--/*
+--=== Class: Toggle
+--*/
+--------------------------------------------------------------------------------
+global euclass Toggle(Widget self) -- the IUP Toggle class
+    function Toggle(String title) : Toggle
+        Crid l l = Crid(IUP, "+IupToggle", {C_STRING, C_STRING}, C_HANDLE)
+        return l.func({title.toC(), NULL})
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>Ihandle this</eucode>
+--====Constructor
+--<eucode>function Toggle(String title) : Toggle</eucode>
 --*/
 --------------------------------------------------------------------------------
 --/*
@@ -328,6 +396,43 @@ end euclass
 --<eucode>Ihandle this</eucode>
 --====Constructor
 --<eucode>function Hbox(Vector children) : Hbox</eucode>
+--*/
+--------------------------------------------------------------------------------
+--/*
+--=== Class: Radio
+--*/
+--------------------------------------------------------------------------------
+global euclass Radio(Container self) -- IUP Radio container class
+    function Radio(Widget child) : Frame
+        Crid r r = Crid(IUP, "+IupRadio", {C_HANDLE}, C_HANDLE)
+        return r.func({child})
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>Ihandle this</eucode>
+--====Constructor
+--<eucode>function Radio(Widget child) : Radio</eucode>
+--*/
+--------------------------------------------------------------------------------
+--/*
+--=== Class: Sbox
+--*/
+--------------------------------------------------------------------------------
+global euclass Sbox(Container self) -- IUP Sbox container class
+    function Sbox(Widget child) : Sbox
+        Crid sb
+        sb = Crid(IUP, "+IupSbox", {C_HANDLE}, C_HANDLE)
+        return sb.func({child})
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>Ihandle this</eucode>
+--====Constructor
+--<eucode>function Sbox(Widget child) : Sbox</eucode>
 --*/
 --------------------------------------------------------------------------------
 --/*
@@ -391,6 +496,25 @@ end euclass
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.0.1
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2021.02.28
+--Status: operational; incomplete
+--Changes:]]]
+--* ##Label## defined
+--* **Iup** made local
+--* **Vbox** defined
+--* ##Vbox## defined
+--* ##hide## defined
+--* ##destroy## defined
+--* **Frame** defined
+--* ##Frame## defined
+--* ##getFile## defined
+--* ##callback## defined
+--* //IUP_CLOSE// defined
+--* //IUP_CONTINUE// defined
 --------------------------------------------------------------------------------
 --[[[Version: 1.0.0
 --OOEU Versions: 1.9.0 and later

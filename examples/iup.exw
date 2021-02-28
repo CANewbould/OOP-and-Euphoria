@@ -8,17 +8,18 @@
 --/*
 --= Example using OOEU library iup.ew
 ------
---[[[Version: 1.0.1
+--[[[Version: 1.0.2
 --Euphoria Versions: 3.1.1 and later
 --Author: C A Newbould
 --Date: 2021.02.28
 --Status: operational; incomplete
 --Changes:]]]
---* created
---* test for ##Label##
---* test for ##Vbox##
---* test for ##getFile##
---* test for ##callback##
+--* test for ##Fill##
+--* test for ##Space##
+--* test for ##Frame##
+--* test for ##Sbox##
+--* test for ##Toggle##
+--* test for ##Radio##
 --
 ------
 --== Module holding examples of IUP Objects
@@ -75,10 +76,16 @@ end function
 procedure main(String title)
     Hbox box
     Dialog dlg
+    Frame fr
     Button getf
     Label lab
     Button ok
     Button quit
+    Radio r
+    Hbox rad
+    Sbox sbox
+    Toggle toggle
+    Toggle toggle2
     Vbox vbox
     Atom ver
     IUP.open()
@@ -86,7 +93,8 @@ procedure main(String title)
         IUP.MessageBox("Version", sprintf("Version %.2f", ver))
         -- dialog example
         ok = Button("OK")
-        ok.attribute("TIP", "I don't do anything!")
+        ok.attribute("TIP", "I expand to the right!")
+        sbox = Sbox(ok)
         quit = Button("Quit")
         quit.attribute("TIP", "Click me to exit the app")
         quit.callback("ACTION", routine_id("quit_onClick"))
@@ -94,9 +102,16 @@ procedure main(String title)
         getf.attribute("TIP", "Opens file dialog")
         getf.callback("ACTION", routine_id("getf_onClick"))
         lab = Label("I am a label!")
-        box = Hbox({ok, quit, getf})
+        box = Hbox({sbox, quit, Space(), getf})
         box.attribute("GAP", "20")
-        vbox = Vbox({box, lab})
+        fr = Frame(box)
+        fr.attribute("TITLE", "I am a frame")
+        toggle = Toggle("I am a toggle!")
+        toggle.attribute("VALUE", "ON")
+        toggle2 = Toggle("I am another toggle!")
+        rad = Hbox({toggle, toggle2})
+        r = Radio(rad)
+        vbox = Vbox({fr, Fill(), r, lab})
         vbox.attribute("GAP", "10")
         -- dialog defined
         dlg = Dialog(vbox)
@@ -114,6 +129,18 @@ end procedure
 main("Testing OOEU's approach to IUP")
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.0.1
+--Euphoria Versions: 3.1.1 and later
+--Author: C A Newbould
+--Date: 2021.02.28
+--Status: operational; incomplete
+--Changes:]]]
+--* created
+--* test for ##Label##
+--* test for ##Vbox##
+--* test for ##getFile##
+--* test for ##callback##
 --------------------------------------------------------------------------------
 --[[[Version: 1.0.0
 --Euphoria Versions: 3.1.1 and later
