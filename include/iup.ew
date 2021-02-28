@@ -1,0 +1,420 @@
+--------------------------------------------------------------------------------
+-- Library: iup.ew
+--------------------------------------------------------------------------------
+-- Notes:
+--
+--
+--------------------------------------------------------------------------------
+--/*
+--= OOEU Library for the IUP GUI Library
+------
+--[[[Version: 1.0.1
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2021.02.28
+--Status: operational; incomplete
+--Changes:]]]
+--* ##Label## defined
+--* **Iup** made local
+--* **Vbox** defined
+--* ##Vbox## defined
+--* ##hide## defined
+--* ##destroy## defined
+--* **Frame** defined
+--* ##Frame## defined
+--* ##getFile## defined
+--* ##callback## defined
+--* //IUP_CLOSE// defined
+--* //IUP_CONTINUE// defined
+--
+------
+--==OOEU Module Library: iup.ew
+--
+-- The following summary gives a short-form indication of the contents of this
+-- module.
+--
+--===Defined Instance
+--* //IUP// - the selected working library
+--===Constants
+--* //IUP_CLOSE//
+--===Types
+--===Routines
+--===Classes (methods)
+--* **Iup**(**Clib**)
+--** ##Iup##(str) : Iup
+--** ##close##() : void
+--** ##getFile##(str) : i
+--** ##MainLoop##() : i
+--** ##MessageBox##(str,str) : void
+--** ##open##() : i
+--** ##version##() : a
+--* **Widget** (**Ihandle**)
+--** ##attribute##(str,str) : void
+--** ##callback##(str,rid) : rid
+--** ##destroy##() : void
+--** ##getAttribute##(str) : str
+--** ##Label##(str) : Widget
+--* **Button** (**Widget**)
+--** ##Button##(str) : Button
+--* **Label** (**Widget**)
+--** ##Label##(str) : Label
+--* **Container** (**Widget**)
+--* **Hbox** (**Container**)
+--* ##Hbox##(s) : Hbox
+--* **Vbox** (**Container**)
+--* ##Vbox##(s) : Vbox
+--* **Dialog**(**Widget**)
+--** ##Dialog##([Widget]) : Dialog
+--** ##hide##() : i
+--** ##show##([i,i]) : i
+--
+-- Utilise these features
+-- by adding the following statement to your module:
+--<eucode>include iup.ew</eucode>
+--
+------
+--*/
+--------------------------------------------------------------------------------
+--/*
+--==Interface
+--*/
+--------------------------------------------------------------------------------
+--/*
+--=== Includes
+--*/
+--------------------------------------------------------------------------------
+include atom.e -- for Clib, Crid
+include os.e -- for WINDOWS
+include sequence.e -- for String
+--------------------------------------------------------------------------------
+--/*
+--=== Constants
+--*/
+--------------------------------------------------------------------------------
+constant C_HANDLE = C_POINTER
+constant C_STRING = C_POINTER
+global constant IUP_CLOSE = -3
+global constant IUP_CONTINUE = -4
+constant UNSET = -1
+constant VOID = 0
+--------------------------------------------------------------------------------
+--
+--=== Euphoria types
+--
+--------------------------------------------------------------------------------
+type Ihandle(integer ih) -- [valid] handle to an IUP Object
+    return ih >= UNSET
+end type
+--------------------------------------------------------------------------------
+type pointer(atom ptr) -- positive [integer] pointer to a NULL-terminated array
+    return ptr > 0
+end type
+--------------------------------------------------------------------------------
+--
+--=== Variables
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--
+--=== Routines
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--/*
+--=== Class: Iup
+--*/
+--------------------------------------------------------------------------------
+euclass Iup(Clib self) -- the IUP Library Class
+    function Iup(sequence iuplib) : Iup
+        return Clib(iuplib)
+    end function
+    function close()
+        Crid c
+        c = Crid(this, "+IupClose", {}, C_INT)
+        return c.func()
+    end function
+    function getFile(String filename) : sequence
+        String fname
+        Crid gf
+        Memory ptr
+        integer ret
+        ptr = Memory(1024)
+        poke(ptr, filename & NULL) -- allocate_string equiv
+        gf = Crid(this, "+IupGetFile", {C_STRING}, C_INT)
+        ret = gf.func({ptr})
+        fname = ptr.toStr()
+        ptr.free()
+        return {ret, fname}
+    end function
+    function MainLoop() : integer
+        Crid ml ml = Crid(this, "+IupMainLoop", {}, C_INT)
+        return ml.func()
+    end function
+    procedure MessageBox(String title, String message)
+        Crid mb mb = Crid(this, "+IupMessage", {C_STRING, C_STRING}, VOID)
+        mb.proc({title.toC(), message.toC()})
+    end procedure
+    function open() : integer
+        Crid o
+        o = Crid(this, "+IupOpen", {C_INT, C_POINTER}, C_INT)
+        return o.func({NULL, NULL})
+    end function
+    function version() : atom
+        Crid v v = Crid(this, "+IupVersionNumber", {}, C_INT)
+        return v.func()/100000
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>clib this</eucode>
+--====Constructors
+--<eucode>Iup(sequence iuplib) : Iup --> handle to IUP shared library</eucode>
+--====Methods
+--<eucode>close() : void -- closes the GUI</eucode>
+--<eucode>function getFile(String filename) : sequence</eucode>
+--<eucode>MainLoop() : integer -- initiates event-handling</eucode>
+--<eucode>procedure MessageBox(String title, String message)</eucode>
+--<eucode>procedure open() : integer -- opens the GUI</eucode>
+--<eucode>function version() : atom -- the version number of IUP being used</eucode>
+--*/
+--------------------------------------------------------------------------------
+--
+--==== Defined instances
+--
+--------------------------------------------------------------------------------
+global Iup IUP -- the IUP GUI shared library being used
+if platform() = WINDOWS then IUP = Iup("\\dll\\32\\iup.dll")
+else IUP = Iup("libiup.so")
+end if
+--------------------------------------------------------------------------------
+--
+--=== Routines
+--
+--------------------------------------------------------------------------------
+function C2Eu(pointer ptr) --> [string] NULL-terminated value at ptr
+    integer c
+    string ret
+    ret = ""
+    c = peek(ptr)
+    while c != 0 do
+        ret &= c
+        ptr += 1
+    end while
+    return ret
+end function
+--------------------------------------------------------------------------------
+--/*
+--=== Class: Widget
+--*/
+--------------------------------------------------------------------------------
+euclass Widget(Ihandle self) -- the core control class
+    procedure attribute(String name, String val)
+        Crid sa
+        sa = Crid(IUP, "+IupSetAttribute", {C_HANDLE, C_STRING, C_STRING}, VOID)
+        sa.proc({this, name.toC(), val.toC()})
+    end procedure
+    function callback(String name, Rid fn) : rid
+        Crid cb
+        cb = Crid(IUP, "+IupSetCallback", {C_HANDLE, C_STRING, C_POINTER}, C_POINTER)
+        return cb.func({this, name.toC(), fn.callBack()})
+    end function
+    procedure destroy()
+        Crid d d = Crid(IUP, "+IupDestroy", {C_HANDLE}, VOID)
+        d.proc({this})
+    end procedure
+    function getAttribute(String name) : string
+        Crid ga
+        pointer ptr
+        ga = Crid(IUP, "+IupGetAttribute", {C_HANDLE, C_STRING}, C_STRING)
+        ptr = ga.func({this, name.toC()})
+        return C2Eu(ptr)
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>Ihandle this</eucode>
+--====Methods
+--<eucode>procedure attribute(String name, String val)</eucode>
+--<eucode>function callback(String name, Rid fn) : rid</eucode>
+--<eucode>procedure destroy()</eucode>
+--<eucode>function getAttribute(String name) : string</eucode>
+--*/
+--------------------------------------------------------------------------------
+--/*
+--=== Class: Button
+--*/
+--------------------------------------------------------------------------------
+global euclass Button(Widget self) -- the IUP Button class
+    function Button(String title) : Button
+        Crid b b = Crid(IUP, "+IupButton", {C_STRING, C_STRING}, C_HANDLE)
+        return b.func({title.toC(), NULL})
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>Ihandle this</eucode>
+--====Constructor
+--<eucode>function Button(String title) : Button</eucode>
+--*/
+--------------------------------------------------------------------------------
+--/*
+--=== Class: Label
+--*/
+--------------------------------------------------------------------------------
+global euclass Label(Widget self) -- the IUP Label class
+    function Label(String title) : Label
+        Crid l l = Crid(IUP, "+IupLabel", {C_STRING, C_STRING}, C_HANDLE)
+        return l.func({title.toC(), NULL})
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>Ihandle this</eucode>
+--====Constructor
+--<eucode>function Label(String title) : Label</eucode>
+--*/
+--------------------------------------------------------------------------------
+--/*
+--=== Class: Container
+--*/
+--------------------------------------------------------------------------------
+euclass Container(Widget self) -- the IUP Container class
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>Ihandle this</eucode>
+--*/
+--------------------------------------------------------------------------------
+--/*
+--=== Class: Frame
+--*/
+--------------------------------------------------------------------------------
+global euclass Frame(Container self) -- IUP Frame container class
+    function Frame(Widget child) : Frame
+        Crid f f = Crid(IUP, "+IupFrame", {C_HANDLE}, C_HANDLE)
+        return f.func({child})
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>Ihandle this</eucode>
+--====Constructor
+--<eucode>function Frame(Widget child) : Frame</eucode>
+--*/
+--------------------------------------------------------------------------------
+--/*
+--=== Class: Hbox
+--*/
+--------------------------------------------------------------------------------
+global euclass Hbox(Container self) -- IUP Hbox container class
+    function Hbox(Vector children) : Hbox
+        Crid hb
+        integer len
+        children &= NULL
+        len = children.length()
+        hb = Crid(IUP, "+IupHbox", Sequence(C_HANDLE, len), C_HANDLE)
+        return hb.func(children)
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>Ihandle this</eucode>
+--====Constructor
+--<eucode>function Hbox(Vector children) : Hbox</eucode>
+--*/
+--------------------------------------------------------------------------------
+--/*
+--=== Class: Vbox
+--*/
+--------------------------------------------------------------------------------
+global euclass Vbox(Container self) -- IUP Vbox container class
+    function Vbox(Vector children) : Vbox
+        Crid vb
+        integer len
+        children &= NULL
+        len = children.length()
+        vb = Crid(IUP, "+IupVbox", Sequence(C_HANDLE, len), C_HANDLE)
+        return vb.func(children)
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>Ihandle this</eucode>
+--====Constructor
+--<eucode>function Vbox(Vector children) : Vbox</eucode>
+--*/
+--------------------------------------------------------------------------------
+--/*
+--=== Class: Dialog
+--*/
+--------------------------------------------------------------------------------
+global euclass Dialog(Widget self) -- the top-level window class
+    function Dialog(Widget child) : Dialog
+        Crid d d = Crid(IUP, "+IupDialog", {C_HANDLE}, C_HANDLE)
+        return d.func({child})
+    end function
+    function hide() : integer
+        Crid h h = Crid(IUP, "+IupHide", {C_HANDLE}, C_INT)
+        return h.func({this})
+    end function
+    function show() : integer
+        Crid s s = Crid(IUP, "IupShow", {C_HANDLE}, C_INT)
+        return s.func({this})
+    end function
+    function show(integer x, integer y) : integer
+        Crid s s = Crid(IUP, "IupShowXY", {C_HANDLE, C_INT, C_INT}, C_INT)
+        return s.func({this, x, y})
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>Ihandle this</eucode>
+--====Constructor
+--<eucode>function Dialog(Widget child) : Dialog</eucode>
+--====Methods
+--<eucode>function hide() : integer</eucode>
+--<eucode>function show([integer x, integer y]) : integer</eucode>
+--*/
+--------------------------------------------------------------------------------
+--
+--==== Defined instances
+--
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.0.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2021.02.27
+--Status: operational; incomplete
+--Changes:]]]
+--* created
+--* **Iup** defined
+--* ##Iup## defined
+--* ##open## defined
+--* ##close## defined
+--* ##version## defined
+--* ##MessageBox## defined
+--* ##Widget## defined
+--* ##attribute## defined
+--* ##getAttribute## defined
+--* //IUP// defined
+--* **Dialog** defined
+--* ##show## defined
+--* ##MainLoop## defined
+--* ##show## extended
+--* ##Button## defined
+--* **Container** defined
+--* **Hbox** defined
+--* ##Hbox## defined
+--------------------------------------------------------------------------------
