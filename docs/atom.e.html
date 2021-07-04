@@ -1,0 +1,263 @@
+<!DOCTYPE html 
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+ <title></title>
+ <link rel="stylesheet" media="screen, projection, print" type="text/css" href="style.css"/>
+<!-- source="F:\GitHub\OOP-and-Euphoria\include\atom.e.cr" -->
+</head>
+<body>
+
+<a name="_0_ooeulibraryfortheatomclassandallderivedclasses"></a><a name="ooeulibraryfortheatomclassandallderivedclasses"></a><h1>OOEU Library for the Atom Class and all derived classes</h1>
+<hr />
+
+<p>Version: 1.6.1 <br />
+OOEU Versions: 1.9.0 and later <br />
+Author: C A Newbould <br />
+Date: 2021.07.04 <br />
+Status: operational; incomplete <br />
+Changes:<br /> </p>
+ </p>
+<ul><li>embedded documentation - improved layout
+</li></ul>
+<hr />
+
+<a name="_1_ooeumodulelibraryatome"></a><a name="ooeumodulelibraryatome"></a><h2>OOEU Module Library: atom.e</h2>
+<p>  The following summary gives a short-form indication of the contents of this  module. </p>
+
+<a name="_2_constants"></a><a name="constants"></a><h3>Constants</h3><ul><li><em>C_BOOL</em>
+</li><li><em>C_INT</em>
+</li><li><em>C_POINTER</em>
+</li><li><em>NULL</em>
+</li></ul>
+<a name="_3_types"></a><a name="types"></a><h3>Types</h3><ul><li><strong>character</strong>(i)
+</li><li><strong>clib</strong>(a)
+</li><li><strong>crid</strong>(i)
+</li><li><strong>memory</strong>(a)
+</li><li><strong>rid</strong>(i)
+</li></ul>
+<a name="_4_routines"></a><a name="routines"></a><h3>Routines</h3>
+<a name="_5_classesmethods"></a><a name="classesmethods"></a><h3>Classes (methods)</h3><ul><li><strong>Atom</strong>(<strong>Object</strong>)<ul><li><tt>Atom</tt>(a) : A
+</li><li><tt>abs</tt>() : a
+</li><li><tt>power</tt>(a) : a
+</li><li><tt>sign</tt>() : i
+</li><li><tt>square</tt>() : a
+</li><li><tt>sqrt</tt>() : a
+</li><li><tt>toString</tt>(s) : s
+</li></ul>
+</li><li><strong>Character</strong>(<strong>Integer</strong>)<ul><li><tt>Character</tt>(c) : C
+</li><li><tt>lower</tt>() : c
+</li><li><tt>upper</tt>() : c
+</li></ul>
+</li><li><strong>Integer</strong> (<strong>Atom</strong>)<ul><li><tt>Integer</tt>(i) : I
+</li><li><tt>div</tt>(i) : i
+</li><li><tt>mod</tt>(i) : i
+</li></ul>
+</li><li><strong>Rid</strong>(<strong>Integer</strong>)<ul><li><tt>routine_id</tt>(s) : r
+</li><li><tt>callBack</tt>() : r
+</li><li><tt>func</tt>([s]) : o
+</li><li><tt>proc</tt>([s])
+</li></ul>
+</li><li><strong>Clib</strong>(<strong>Atom</strong>)<ul><li><tt>Clib</tt>(s) : Clib
+</li></ul>
+</li><li><strong>Crid</strong>(<strong>Integer</strong>)<ul><li><tt>Crid</tt>(Clib,s,s,a) : Crid
+</li><li><tt>func</tt>([s]) : a
+</li><li><tt>proc</tt>([s])
+</li></ul>
+</li><li><strong>Memory</strong>(<strong>atom</strong>)<ul><li><tt>Memory</tt>(i) : Memory
+</li><li><tt>free</tt>()
+</li><li>##toStr() : str
+</li></ul>
+</li></ul>
+<p>  Utilise these features  by adding the following statement to your module: </p>
+
+<pre class="examplecode"><font color="#0000FF">include </font><font color="#330033">atom.e</font>
+</pre>
+
+<hr />
+
+<a name="_6_interface"></a><a name="interface"></a><h2>Interface</h2>
+<a name="_7_includes"></a><a name="includes"></a><h3>Includes</h3>
+<pre class="examplecode"><font color="#0000FF">include </font><font color="#330033">object.e </font><font color="#FF0055">-- parent</font>
+</pre>
+
+<pre class="examplecode"><font color="#0000FF">global constant </font><font color="#330033">C_BOOL = #01000004</font>
+</pre>
+
+<pre class="examplecode"><font color="#0000FF">global constant </font><font color="#330033">C_INT = #01000004</font>
+</pre>
+
+<pre class="examplecode"><font color="#0000FF">global constant </font><font color="#330033">C_POINTER = #02000004</font>
+</pre>
+
+<pre class="examplecode"><font color="#0000FF">global constant </font><font color="#330033">NULL = 0</font>
+</pre>
+
+<a name="_8_euphoriatypes"></a><a name="euphoriatypes"></a><h3>Euphoria types</h3>
+<pre class="examplecode"><font color="#0000FF">global type </font><font color="#330033">character</font><font color="#880033">(</font><font color="#0000FF">integer </font><font color="#330033">c</font><font color="#880033">) </font><font color="#FF0055">-- control or printable ascii code</font>
+</pre>
+
+<pre class="examplecode"><font color="#0000FF">global type </font><font color="#330033">clib</font><font color="#880033">(</font><font color="#0000FF">atom </font><font color="#330033">c</font><font color="#880033">) </font><font color="#FF0055">-- handle to C-language library</font>
+</pre>
+
+<pre class="examplecode"><font color="#0000FF">global type </font><font color="#330033">crid</font><font color="#880033">(</font><font color="#0000FF">integer </font><font color="#330033">c</font><font color="#880033">) </font><font color="#FF0055">-- C-library routine_id value</font>
+</pre>
+
+<pre class="examplecode"><font color="#0000FF">global type </font><font color="#330033">memory</font><font color="#880033">(</font><font color="#0000FF">atom </font><font color="#330033">a</font><font color="#880033">) </font><font color="#FF0055">-- pointer to start of memory block</font>
+</pre>
+
+<pre class="examplecode"><font color="#0000FF">global type </font><font color="#330033">rid</font><font color="#880033">(</font><font color="#0000FF">integer </font><font color="#330033">r</font><font color="#880033">) </font><font color="#FF0055">-- routine_id value</font>
+</pre>
+
+<a name="_9_classes"></a><a name="classes"></a><h3>Classes</h3>
+<pre class="examplecode"><font color="#0000FF">global </font><font color="#330033">euclass Atom</font><font color="#880033">(</font><font color="#330033">Object self</font><font color="#880033">) </font><font color="#FF0055">-- the type class for all single-valued objects: extends Object</font>
+</pre>
+
+<a name="_10_property"></a><a name="property"></a><h4>Property</h4>
+<pre class="examplecode"><font color="#0000FF">atom </font><font color="#330033">this</font>
+</pre>
+
+<a name="_11_constructors"></a><a name="constructors"></a><h4>Constructors</h4>
+<pre class="examplecode"><font color="#330033">Atom</font><font color="#880033">(</font><font color="#0000FF">atom </font><font color="#330033">a</font><font color="#880033">) </font><font color="#330033">: Atom </font><font color="#FF0055">-- assigns type-checked property value</font>
+</pre>
+
+<a name="_12_methods"></a><a name="methods"></a><h4>Methods</h4>
+<pre class="examplecode"><font color="#330033">abs</font><font color="#880033">() </font><font color="#330033">: </font><font color="#0000FF">atom </font><font color="#FF0055">-- the absolute value</font>
+</pre>
+
+<pre class="examplecode"><font color="#0000FF">power</font><font color="#880033">(</font><font color="#0000FF">atom </font><font color="#330033">pow</font><font color="#880033">) </font><font color="#330033">: </font><font color="#0000FF">atom </font><font color="#FF0055">-- this raised to pow</font>
+</pre>
+
+<pre class="examplecode"><font color="#330033">sign</font><font color="#880033">() </font><font color="#330033">: </font><font color="#0000FF">integer </font><font color="#FF0055">-- -1|0|1, depending on the sign</font>
+</pre>
+
+<pre class="examplecode"><font color="#330033">square</font><font color="#880033">() </font><font color="#330033">: </font><font color="#0000FF">atom </font><font color="#FF0055">-- this squared</font>
+</pre>
+
+<pre class="examplecode"><font color="#0000FF">sqrt</font><font color="#880033">() </font><font color="#FF0055">-- sqrt of this; either atom or complex</font>
+</pre>
+
+<pre class="examplecode"><font color="#330033">toString</font><font color="#880033">(</font><font color="#330033">string fmt</font><font color="#880033">) </font><font color="#330033">: string </font><font color="#FF0055">-- the value as a formatted string</font>
+</pre>
+
+<hr />
+
+<pre class="examplecode"><font color="#0000FF">global </font><font color="#330033">euclass Integer</font><font color="#880033">(</font><font color="#330033">Atom self</font><font color="#880033">) </font><font color="#FF0055">-- single-valued integer objects: extends Atom</font>
+</pre>
+
+<a name="_13_property"></a><a name="property"></a><h4>Property</h4>
+<pre class="examplecode"><font color="#0000FF">integer </font><font color="#330033">this</font>
+</pre>
+
+<a name="_14_constructors"></a><a name="constructors"></a><h4>Constructors</h4>
+<pre class="examplecode"><font color="#330033">Integer</font><font color="#880033">(</font><font color="#0000FF">integer </font><font color="#330033">i</font><font color="#880033">) </font><font color="#330033">: Integer </font><font color="#FF0055">-- assigns type-checked property value</font>
+</pre>
+
+<a name="_15_methods"></a><a name="methods"></a><h4>Methods</h4>
+<pre class="examplecode"><font color="#0000FF">function </font><font color="#330033">div</font><font color="#880033">(</font><font color="#0000FF">integer </font><font color="#330033">that</font><font color="#880033">) </font><font color="#330033">: </font><font color="#0000FF">integer </font><font color="#FF0055">-- integer division this/that</font>
+</pre>
+
+<pre class="examplecode"><font color="#0000FF">function </font><font color="#330033">mod</font><font color="#880033">(</font><font color="#0000FF">integer </font><font color="#330033">that</font><font color="#880033">) </font><font color="#330033">: </font><font color="#0000FF">integer </font><font color="#FF0055">-- modulus this of that</font>
+</pre>
+
+<pre class="examplecode"><font color="#0000FF">global </font><font color="#330033">euclass Character</font><font color="#880033">(</font><font color="#330033">Integer self</font><font color="#880033">) </font><font color="#FF0055">-- ascii coded objects: extends Integer</font>
+</pre>
+
+<a name="_16_property"></a><a name="property"></a><h4>Property</h4>
+<pre class="examplecode"><font color="#330033">character this</font>
+</pre>
+
+<a name="_17_constructors"></a><a name="constructors"></a><h4>Constructors</h4>
+<pre class="examplecode"><font color="#330033">Character</font><font color="#880033">(</font><font color="#330033">character c</font><font color="#880033">) </font><font color="#330033">: Character </font><font color="#FF0055">-- assigns type-checked property value</font>
+</pre>
+
+<a name="_18_methods"></a><a name="methods"></a><h4>Methods</h4>
+<pre class="examplecode"><font color="#0000FF">function </font><font color="#330033">lower</font><font color="#880033">() </font><font color="#330033">: character </font><font color="#FF0055">-- lower-case transformation</font>
+</pre>
+
+<pre class="examplecode"><font color="#0000FF">function </font><font color="#330033">upper</font><font color="#880033">() </font><font color="#330033">: character </font><font color="#FF0055">-- upper-case transformation</font>
+</pre>
+
+<hr />
+
+<pre class="examplecode"><font color="#0000FF">global </font><font color="#330033">euclass Rid</font><font color="#880033">(</font><font color="#330033">Integer self</font><font color="#880033">) </font><font color="#FF0055">-- routine_id Objects</font>
+</pre>
+
+<a name="_19_property"></a><a name="property"></a><h4>Property</h4>
+<pre class="examplecode"><font color="#330033">rid this</font>
+</pre>
+
+<a name="_20_constructors"></a><a name="constructors"></a><h4>Constructors</h4>
+<pre class="examplecode"><font color="#0000FF">routine_id</font><font color="#880033">(</font><font color="#0000FF">sequence </font><font color="#330033">s</font><font color="#880033">) </font><font color="#330033">: Rid </font><font color="#FF0055">-- assigns type-checked property value</font>
+</pre>
+
+<a name="_21_methods"></a><a name="methods"></a><h4>Methods</h4>
+<pre class="examplecode"><font color="#0000FF">function </font><font color="#330033">callBack</font><font color="#880033">() </font><font color="#330033">: Rid </font><font color="#FF0055">--machine address of the function</font>
+</pre>
+
+<pre class="examplecode"><font color="#0000FF">function </font><font color="#330033">func</font><font color="#880033">(</font><font color="#993333">[</font><font color="#0000FF">sequence </font><font color="#330033">a</font><font color="#993333">]</font><font color="#880033">) </font><font color="#330033">: </font><font color="#0000FF">object </font><font color="#FF0055">-- executes the function</font>
+</pre>
+
+<pre class="examplecode"><font color="#0000FF">procedure </font><font color="#330033">proc</font><font color="#880033">(</font><font color="#993333">[</font><font color="#0000FF">sequence </font><font color="#330033">a</font><font color="#993333">]</font><font color="#880033">) </font><font color="#FF0055">-- executes the procedure</font>
+</pre>
+
+<hr />
+
+<pre class="examplecode"><font color="#0000FF">global </font><font color="#330033">euclass Clib</font><font color="#880033">(</font><font color="#330033">Atom self</font><font color="#880033">) </font><font color="#FF0055">-- C-library Objects</font>
+</pre>
+
+<a name="_22_property"></a><a name="property"></a><h4>Property</h4>
+<pre class="examplecode"><font color="#330033">clib this</font>
+</pre>
+
+<a name="_23_constructors"></a><a name="constructors"></a><h4>Constructors</h4>
+<pre class="examplecode"><font color="#330033">Clib</font><font color="#880033">(</font><font color="#0000FF">sequence </font><font color="#330033">s</font><font color="#880033">) </font><font color="#330033">: Clib </font><font color="#FF0055">-- assigns type-checked property value</font>
+</pre>
+
+<a name="_24_methods"></a><a name="methods"></a><h4>Methods</h4>
+<hr />
+
+<pre class="examplecode"><font color="#0000FF">global </font><font color="#330033">euclass Crid</font><font color="#880033">(</font><font color="#330033">Integer self</font><font color="#880033">) </font><font color="#FF0055">-- C-language routine Objects</font>
+</pre>
+
+<a name="_25_property"></a><a name="property"></a><h4>Property</h4>
+<pre class="examplecode"><font color="#330033">crid this</font>
+</pre>
+
+<a name="_26_constructors"></a><a name="constructors"></a><h4>Constructors</h4>
+<pre class="examplecode"><font color="#330033">Crid</font><font color="#880033">(</font><font color="#330033">Clib dll, </font><font color="#0000FF">sequence </font><font color="#330033">s, </font><font color="#0000FF">sequence </font><font color="#330033">a, </font><font color="#0000FF">atom </font><font color="#330033">r</font><font color="#880033">) </font><font color="#330033">: Crid </font><font color="#FF0055">-- assigns type-checked property value</font>
+</pre>
+
+<a name="_27_methods"></a><a name="methods"></a><h4>Methods</h4>
+<pre class="examplecode"><font color="#0000FF">function </font><font color="#330033">func</font><font color="#880033">(</font><font color="#993333">[</font><font color="#0000FF">sequence </font><font color="#330033">a</font><font color="#993333">]</font><font color="#880033">) </font><font color="#330033">: </font><font color="#0000FF">atom </font><font color="#FF0055">-- executes the function</font>
+</pre>
+
+<pre class="examplecode"><font color="#0000FF">procedure </font><font color="#330033">proc</font><font color="#880033">(</font><font color="#993333">[</font><font color="#0000FF">sequence </font><font color="#330033">a</font><font color="#993333">]</font><font color="#880033">) </font><font color="#FF0055">-- executes the procedure</font>
+</pre>
+
+<hr />
+
+<pre class="examplecode"><font color="#0000FF">global </font><font color="#330033">euclass Memory</font><font color="#880033">(</font><font color="#330033">memory self</font><font color="#880033">) </font><font color="#FF0055">-- the memory class</font>
+</pre>
+
+<a name="_28_property"></a><a name="property"></a><h4>Property</h4>
+<pre class="examplecode"><font color="#330033">memory this</font>
+</pre>
+
+<a name="_29_constructor"></a><a name="constructor"></a><h4>Constructor</h4>
+<pre class="examplecode"><font color="#0000FF">function </font><font color="#330033">Memory</font><font color="#880033">(</font><font color="#0000FF">integer </font><font color="#330033">size</font><font color="#880033">) </font><font color="#330033">: Memory</font>
+</pre>
+
+<a name="_30_methods"></a><a name="methods"></a><h4>Methods</h4>
+<pre class="examplecode"><font color="#0000FF">procedure </font><font color="#330033">free</font><font color="#880033">()</font>
+</pre>
+
+<pre class="examplecode"><font color="#0000FF">function </font><font color="#330033">toStr</font><font color="#880033">() </font><font color="#330033">: </font><font color="#0000FF">sequence </font><font color="#880033">(</font><font color="#330033">string</font><font color="#880033">)</font>
+</pre>
+
+<hr /> 
+</body></html>

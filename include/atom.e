@@ -8,18 +8,13 @@
 --/*
 --= OOEU Library for the Atom Class and all derived classes
 ------
---[[[Version: 1.6.0
+--[[[Version: 1.6.1
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
---Date: 2021.02.28
+--Date: 2021.07.04
 --Status: operational; incomplete
 --Changes:]]]
---* **memory** defined
---* **Memory** defined
---* ##Memory## defined
---* ##free## defined
---* ##toStr## defined
---* ##callBack## defined
+--* embedded documentation - improved layout
 --
 ------
 --==OOEU Module Library: atom.e
@@ -189,6 +184,7 @@ end euclass
 --<eucode>square() : atom -- this squared</eucode>
 --<eucode>sqrt() -- sqrt of this; either atom or complex</eucode>
 --<eucode>toString(string fmt) : string -- the value as a formatted string</eucode>
+------
 --*/
 --------------------------------------------------------------------------------
 global euclass Integer(Atom self) -- single-valued integer objects: extends Atom
@@ -237,6 +233,7 @@ end euclass
 --====Methods
 --<eucode>function lower() : character -- lower-case transformation</eucode>
 --<eucode>function upper() : character -- upper-case transformation</eucode>
+------
 --*/
 --------------------------------------------------------------------------------
 global euclass Rid(Integer self) -- routine_id Objects
@@ -266,6 +263,7 @@ end euclass
 --<eucode>function callBack() : Rid --machine address of the function</eucode>
 --<eucode>function func([sequence a]) : object -- executes the function</eucode>
 --<eucode>procedure proc([sequence a]) -- executes the procedure</eucode>
+------
 --*/
 --------------------------------------------------------------------------------
 global euclass Clib(Atom self) -- C-library Objects
@@ -280,6 +278,7 @@ end euclass
 --====Constructors
 --<eucode>Clib(sequence s) : Clib -- assigns type-checked property value</eucode>
 --====Methods
+------
 --*/
 --------------------------------------------------------------------------------
 global euclass Crid(Integer self) -- C-language routine Objects
@@ -308,6 +307,7 @@ end euclass
 --====Methods
 --<eucode>function func([sequence a]) : atom -- executes the function</eucode>
 --<eucode>procedure proc([sequence a]) -- executes the procedure</eucode>
+------
 --*/
 --------------------------------------------------------------------------------
 --
@@ -346,9 +346,23 @@ end euclass
 --====Methods
 --<eucode>procedure free()</eucode>
 --<eucode>function toStr() : sequence (string)</eucode>
+------
 --*/
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.6.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2021.02.28
+--Status: operational; incomplete
+--Changes:]]]
+--* **memory** defined
+--* **Memory** defined
+--* ##Memory## defined
+--* ##free## defined
+--* ##toStr## defined
+--* ##callBack## defined
 --------------------------------------------------------------------------------
 --[[[Version: 1.5.1
 --OOEU Versions: 1.9.0 and later
