@@ -3,19 +3,18 @@
 --------------------------------------------------------------------------------
 -- Notes:
 --
---
+-- ##readlines## needs to trim trailing LF
 --------------------------------------------------------------------------------
 --/*
 --= OOEU Library for the File Class
 ------
---[[[Version: 1.1.0
+--[[[Version: 1.1.1
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
---Date: 2021.01.19
+--Date: 2021.03.28
 --Status: operational; complete
 --Changes:]]]
---* ##length## defined
---* ##read## re-defined
+--* ##readlines## modified
 --
 ------
 --==OOEU extension library: file.e
@@ -134,7 +133,7 @@ global euclass File(handle self) -- a file handle
         lines = {}
         line = gets(this)
         while line != EOF do
-            lines = append(lines, line)
+            lines = append(lines, line[1..$-1])
             line = gets(this)
         end while
         return lines
@@ -210,6 +209,15 @@ end euclass
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.1.0
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2021.01.19
+--Status: operational; complete
+--Changes:]]]
+--* ##length## defined
+--* ##read## re-defined
 --------------------------------------------------------------------------------
 --[[[Version: 1.0.1
 --OOEU Versions: 1.9.0 and later
