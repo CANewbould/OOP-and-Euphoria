@@ -55,15 +55,15 @@
 --=== Constants
 --*/
 --------------------------------------------------------------------------------
-global constant FALSE = (1=0)
-global constant TRUE = (1=1)
+global constant FALSE = 0
+global constant TRUE = not FALSE
 --------------------------------------------------------------------------------
 --/*
 --=== Types
 --*/
 --------------------------------------------------------------------------------
 global type boolean(integer this)
-    return this = TRUE or this = FALSE
+    return TRUE
 end type
 --------------------------------------------------------------------------------
 --
@@ -75,7 +75,7 @@ end type
 --=== Routines
 --*/
 --------------------------------------------------------------------------------
-global function iif(integer test, object true, object false) : object -- inline if statement
+global function iif(boolean test, object true, object false) : object -- inline if statement
     if test then return true
     else return false
     end if
