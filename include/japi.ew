@@ -354,10 +354,10 @@ end euclass
 --------------------------------------------------------------------------------
 global euclass JText(JWidget self) -- an editable text block, either line or multiline
     function JText(JObject parent, integer width) : JText
-        return fC("j_textfield", {C_INT, C_INT}, {parent, width}, C_INT)        
+        return fC("j_textfield", {C_INT, C_INT}, {parent, width}, C_INT)
     end function
     function JText(JObject parent, integer rows, integer width) : JText
-        return fC("j_textarea", {C_INT, C_INT, C_INT}, {parent, rows, width}, C_INT)        
+        return fC("j_textarea", {C_INT, C_INT, C_INT}, {parent, rows, width}, C_INT)
     end function
 end euclass
 --------------------------------------------------------------------------------
@@ -372,13 +372,14 @@ end euclass
 euclass JContainer(JWidget self) -- the JAPI container class
     procedure add(JWidget control)
         pC("j_add", {C_INT, C_INT}, {control, this})
+    end procedure
     procedure pack()
         pC("j_pack", {C_INT}, {this})
     end procedure
     procedure setHgap(integer gap)
         pC("j_sethgap", {C_INT, C_INT}, {this, gap})
     end procedure
-        procedure setLayout()
+    procedure setLayout()
         pC("j_setborderlayout", {C_INT}, {this})
     end procedure
     procedure setLayout(integer align)
