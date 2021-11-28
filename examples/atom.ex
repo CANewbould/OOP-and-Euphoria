@@ -8,14 +8,14 @@
 --/*
 --= Example using OOEU library atom.e
 ------
---[[[Version: 1.2.0
+--[[[Version: 1.3.0
 --Euphoria Versions: 3.1.1 and later
 --Author: C A Newbould
---Date: 2021.01.19
+--Date: 2021.02.27
 --Status: operational; incomplete
 --Changes:]]]
---* test for ##Clib## added
---* test for ##Crid## added
+--* further test for ##Clib## added
+--* further test for ##Crid## added
 --
 ------
 --== Module holding examples of Atom Objects
@@ -28,7 +28,7 @@
 --=== Includes
 --
 --------------------------------------------------------------------------------
-include sequence.e
+include ..\include\sequence.e
 --------------------------------------------------------------------------------
 --
 --=== Constants
@@ -72,6 +72,8 @@ procedure main(Head title)
     Atom a, a_
     Character c, c_
     Integer i, i_
+    Clib iup
+    Crid iopen
     Crid mbox
     complex s
     Clib user
@@ -87,7 +89,11 @@ procedure main(Head title)
     user = Clib("user32.dll")
     user.show("The handle to 'user32.dll' is %d\n")
     mbox = Crid(user, "MessageBoxA", {C_POINTER, C_POINTER, C_POINTER, C_INT}, C_INT)
-    mbox.show("The handle to 'MessageBoxA' is %d")
+    mbox.show("The handle to 'MessageBoxA' is %d\n")
+    iup = Clib("\\dll\\32\\iup.dll")
+    iup.show("The handle to 'iup.dll' is %d\n")
+    iopen = Crid(iup, "+IupOpen", {C_INT, C_POINTER}, C_INT)
+    iopen.show("The handle to 'IupOpen' is %d\n")
 end procedure
 --------------------------------------------------------------------------------
 -- Execution
@@ -95,6 +101,15 @@ end procedure
 main("Testing Atom library")
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.2.0
+--Euphoria Versions: 3.1.1 and later
+--Author: C A Newbould
+--Date: 2021.01.19
+--Status: operational; incomplete
+--Changes:]]]
+--* test for ##Clib## added
+--* test for ##Crid## added
 --------------------------------------------------------------------------------
 --[[[Version: 1.1.0
 --Euphoria Versions: 3.1.1 and later
