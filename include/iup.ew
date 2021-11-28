@@ -8,23 +8,13 @@
 --/*
 --= OOEU Library for the IUP GUI Library
 ------
---[[[Version: 1.0.2
+--[[[Version: 1.0.4
 --OOEU Versions: 1.9.0 and later
 --Author: C A Newbould
---Date: 2021.02.28
+--Date: 2021.03.31
 --Status: operational; incomplete
 --Changes:]]]
---* ##attributes## defined
---* **Fill** defined
---* ##Fill## defined
---* **Space** defined
---* ##Space## defined
---* **Sbox** defined
---* ##Sbox## defined
---* **Toggle** defined
---* ##Toggle## defined
---* **Radio** defined
---* ##Radio## defined
+--* ##Error## defined
 --
 ------
 --==OOEU Module Library: iup.ew
@@ -42,6 +32,7 @@
 --* **Iup**(**Clib**)
 --** ##Iup##(str) : Iup
 --** ##close##() : void
+--** ##Error##([Dialog],str) : void
 --** ##getFile##(str) : i
 --** ##MainLoop##() : i
 --** ##MessageBox##(str,str) : void
@@ -61,7 +52,9 @@
 --* **Label** (**Widget**)
 --** ##Label##(str) : Label
 --* **Space** (**Widget**)
---** ##Space##() : Fill
+--** ##Space##() : Space
+--* **Text** (**Widget**)
+--** ##Text##() : Text
 --* **Container** (**Widget**)
 --* **Frame** (**Container**)
 --** ##Frame##(Widget) : Frame
@@ -143,6 +136,14 @@ euclass Iup(Clib self) -- the IUP Library Class
         c = Crid(this, "+IupClose", {}, C_INT)
         return c.func()
     end function
+    procedure Error(Ihandle parent, String message)
+        Crid me me = Crid(this, "+IupMessageError", {C_HANDLE, C_STRING}, VOID)
+        me.proc({parent, message.toC()})
+    end procedure
+    procedure Error(String message)
+        Crid me me = Crid(this, "+IupMessageError", {C_HANDLE, C_STRING}, VOID)
+        me.proc({NULL, message.toC()})
+    end procedure
     function getFile(String filename) : sequence
         String fname
         Crid gf
@@ -329,6 +330,23 @@ end euclass
 --<eucode>function Space() : Space</eucode>
 --------------------------------------------------------------------------------
 --/*
+--=== Class: Text
+--*/
+--------------------------------------------------------------------------------
+global euclass Text(Widget self) -- the IUP Text class
+    function Text() : Text
+        Crid t t = Crid(IUP, "+IupText", {C_STRING}, C_HANDLE)
+        return t.func({NULL})
+    end function
+end euclass
+--------------------------------------------------------------------------------
+--/*
+--====Property
+--<eucode>Ihandle this</eucode>
+--====Constructor
+--<eucode>function Text() : Text</eucode>
+--------------------------------------------------------------------------------
+--/*
 --=== Class: Toggle
 --*/
 --------------------------------------------------------------------------------
@@ -496,6 +514,32 @@ end euclass
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.0.3
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2021.03.01
+--Status: operational; incomplete
+--Changes:]]]
+--* ##Text## defined
+--------------------------------------------------------------------------------
+--[[[Version: 1.0.2
+--OOEU Versions: 1.9.0 and later
+--Author: C A Newbould
+--Date: 2021.02.28
+--Status: operational; incomplete
+--Changes:]]]
+--* ##attributes## defined
+--* **Fill** defined
+--* ##Fill## defined
+--* **Space** defined
+--* ##Space## defined
+--* **Sbox** defined
+--* ##Sbox## defined
+--* **Toggle** defined
+--* ##Toggle## defined
+--* **Radio** defined
+--* ##Radio## defined
 --------------------------------------------------------------------------------
 --[[[Version: 1.0.1
 --OOEU Versions: 1.9.0 and later
