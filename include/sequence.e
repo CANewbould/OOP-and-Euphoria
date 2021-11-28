@@ -36,13 +36,13 @@
 --===Routines
 --===Classes (methods)
 --* **Sequence**(**Object**)
---** ##Sequence(s) : S
---** ##Sequence(o,i) : S
---** ##filter(r) : s
+--** ##Sequence##(s) : S
+--** ##Sequence##(o,i) : S
+--** ##filter##(r) : s
 --** ##fold##(r,x) : x
---** ##length() : i
---** ##map(r) : s
---** ##reverse() : s
+--** ##length##() : i
+--** ##map##(r) : s
+--** ##reverse##() : s
 --* **String**(**Sequence**)
 --** ##String##(str) : Str
 --** ##show##([b])
