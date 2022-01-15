@@ -8,13 +8,13 @@
 --/*
 --= Example using OOEU library file.e
 ------
---[[[Version: 1.1.0
+--[[[Version: 1.1.1
 --Euphoria Versions: 3.1.1 and later
 --Author: C A Newbould
---Date: 2021.01.19
+--Date: 2022.01.15
 --Status: operational; incomplete
 --Changes:]]]
---* simplified by using ##length##
+--* modified output to add a LF
 --
 ------
 --== Module holding examples of File Objects
@@ -78,7 +78,7 @@ procedure main(Head title)
     mess = "Handle to '" & info[3] & "': " mess.show(LF)
     mess = "Opening mode: " & info[2] mess.show(LF)
     mess = "The first line is:"  mess.show(LF)
-    mess = atm.next() mess.show()
+    mess = atm.next() mess.show(LF)
     mess = "The next 15 characters are: " mess.show()
     mess = atm.read(15) mess.show(LF)
     mess = "We are now at position: " mess.show() ?atm.tell()
@@ -93,6 +93,14 @@ end procedure
 main("Testing File library")
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.1.0
+--Euphoria Versions: 3.1.1 and later
+--Author: C A Newbould
+--Date: 2021.01.19
+--Status: operational; incomplete
+--Changes:]]]
+--* simplified by using ##length##
 --------------------------------------------------------------------------------
 --[[[Version: 1.0.1
 --Euphoria Versions: 3.1.1 and later
