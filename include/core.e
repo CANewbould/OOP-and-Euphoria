@@ -8,15 +8,13 @@
 --/*
 --= Euphoria Core Library
 ------
---[[[Version: 1.0.0
+--[[[Version: 1.0.1
 --Euphoria Versions: 3.1.1 and later
 --Author: C A Newbould
---Date: 2020.08.05
+--Date: 2022.01.09
 --Status: operational; incomplete
 --Changes:]]]
---* created
---* moved material from //object.e//
---* ##run## defined
+--* ##iif## removed - in ooeu?
 --
 ------
 --== Library holding basic type & functional definitions
@@ -32,7 +30,6 @@
 --===Types
 --* **boolean**
 --===Routines
---* ##iif##(i,x,x) : x
 --* ##run##(i,i) : s
 --
 -- Utilise these features
@@ -75,11 +72,11 @@ end type
 --=== Routines
 --*/
 --------------------------------------------------------------------------------
-global function iif(boolean test, object true, object false) : object -- inline if statement
-    if test then return true
-    else return false
-    end if
-end function
+--global function iif(boolean test, object true, object false) : object -- inline if statement
+    --if test then return true
+    --else return false
+    --end if
+--end function
 --------------------------------------------------------------------------------
 --/*
 --Parameters:
@@ -111,4 +108,13 @@ end function
 --------------------------------------------------------------------------------
 -- Previous versions
 --------------------------------------------------------------------------------
+--[[[Version: 1.0.0
+--Euphoria Versions: 3.1.1 and later
+--Author: C A Newbould
+--Date: 2020.08.05
+--Status: operational; incomplete
+--Changes:]]]
+--* created
+--* moved material from //object.e//
+--* ##run## defined
 --------------------------------------------------------------------------------
