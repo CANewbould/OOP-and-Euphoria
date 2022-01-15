@@ -8,14 +8,13 @@
 --/*
 --= Example using OOEU library atom.e
 ------
---[[[Version: 1.3.0
+--[[[Version: 1.3.1
 --Euphoria Versions: 3.1.1 and later
 --Author: C A Newbould
---Date: 2021.02.27
+--Date: 2022.01.15
 --Status: operational; incomplete
 --Changes:]]]
---* further test for ##Clib## added
---* further test for ##Crid## added
+--* test for IUP generalised to work for Linux
 --
 ------
 --== Module holding examples of Atom Objects
@@ -28,7 +27,8 @@
 --=== Includes
 --
 --------------------------------------------------------------------------------
-include ..\include\sequence.e
+include ../include/sequence.e -- now works for all OS
+include ../include/os.e -- for WIN32
 --------------------------------------------------------------------------------
 --
 --=== Constants
@@ -90,8 +90,12 @@ procedure main(Head title)
     user.show("The handle to 'user32.dll' is %d\n")
     mbox = Crid(user, "MessageBoxA", {C_POINTER, C_POINTER, C_POINTER, C_INT}, C_INT)
     mbox.show("The handle to 'MessageBoxA' is %d\n")
-    iup = Clib("\\dll\\32\\iup.dll")
-    iup.show("The handle to 'iup.dll' is %d\n")
+    if platform() =  WIN32 then
+        iup = Clib("\\dll\\32\\iup.dll")
+    else
+        iup = Clib("libiup.so")
+    end if
+    iup.show("The handle to the IUP library is %d\n")
     iopen = Crid(iup, "+IupOpen", {C_INT, C_POINTER}, C_INT)
     iopen.show("The handle to 'IupOpen' is %d\n")
 end procedure
@@ -101,6 +105,15 @@ end procedure
 main("Testing Atom library")
 --------------------------------------------------------------------------------
 -- Previous versions
+--------------------------------------------------------------------------------
+--[[[Version: 1.3.0
+--Euphoria Versions: 3.1.1 and later
+--Author: C A Newbould
+--Date: 2021.02.27
+--Status: operational; incomplete
+--Changes:]]]
+--* further test for ##Clib## added
+--* further test for ##Crid## added
 --------------------------------------------------------------------------------
 --[[[Version: 1.2.0
 --Euphoria Versions: 3.1.1 and later
